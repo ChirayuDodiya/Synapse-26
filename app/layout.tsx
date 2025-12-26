@@ -20,11 +20,11 @@ const bebasNeue = Bebas_Neue({
 
 export const metadata: Metadata = {
   title: "SYNAPSE'26 | DA Ka Tyohaar",
-  description: "SYNAPSE'26 - The Ultimate Tech Festival. Register now for the most anticipated event of the year.",
+  description: "SYNAPSE'26 - The Ultimate Tech-Cultural Festival. Register now for the most anticipated event of the year.",
   keywords: ["synapse", "tech fest", "college fest", "2026", "technology", "events"],
   openGraph: {
     title: "SYNAPSE'26",
-    description: "The Ultimate Tech Festival",
+    description: "The Ultimate Techno-Cultural Festival",
     type: "website",
   },
 };
