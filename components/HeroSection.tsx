@@ -2,13 +2,11 @@
 
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
+import { useRouter } from "next/navigation";
 import { CountdownTimer } from "./CountdownTimer";
-import { Button } from "@/app/components/ui/button";
-import { Card, CardContent } from "@/app/components/ui/card";
-import { Badge } from "@/app/components/ui/badge";
-import {useRouter} from "next/navigation";
-
-
+import { Button } from "@/components/ui/Button";
+import { Card, CardContent } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
 
 export function HeroSection() {
   const router = useRouter();

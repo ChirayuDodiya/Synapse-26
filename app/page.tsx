@@ -1,17 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { LandingPage } from "@/app/components/LandingPage";
-import { LoadingScreen } from "@/app/components/LoadingScreen";
-
+import Synapse from "@/app/synapse/page";
+import About from "@/app/about/page";
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
-
   return (
     <>
-      {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
       <main className="relative min-h-screen bg-black overflow-hidden">
-        <LandingPage />
+        <Synapse />
+
       </main>
     </>
   );
