@@ -14,9 +14,6 @@ export default function Home() {
 
       </main>
 
-      {/* Just use this single section as Home Page 
-      <HomeMainSection /> 
-      */}
     </>
   );
 }
