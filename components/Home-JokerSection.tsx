@@ -3,6 +3,8 @@
 import { useEffect, useRef, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Tilt from "react-parallax-tilt";
+// import { Icon } from "@iconify/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,7 +18,12 @@ export default function JokerSection() {
     const leftTitleRef = useRef<HTMLDivElement>(null);
     const rightTitleRef = useRef<HTMLDivElement>(null);
     const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-    const scrollHintRef = useRef<HTMLDivElement>(null);
+    const exploreTitleRef = useRef<HTMLHeadingElement>(null);
+    const exploreWordRef = useRef<HTMLSpanElement>(null);
+    const fullImageRef = useRef<HTMLDivElement>(null);
+    const eventsWordRef = useRef<HTMLSpanElement>(null);
+
+
 
     const generateViewportPath = useCallback(() => {
         if (typeof window === 'undefined') return '';
@@ -143,22 +150,31 @@ export default function JokerSection() {
                 scrollTrigger: {
                     trigger: jokerSectionRef.current,
                     start: "top top",
-                    end: "+=400%",
-                    scrub: 1,
+                    end: "+=300%",
+                    scrub: 3,
                     pin: true,
                     pinSpacing: true,
                     anticipatePin: 1,
                     invalidateOnRefresh: true,
+
                     onUpdate: (self) => {
                         const progress = self.progress;
+
+                        /* FULL IMAGE VISIBILITY */
+                        if (fullImageRef.current) {
+                            fullImageRef.current.style.display =
+                                progress < 0.05 ? "block" : "none";
+                        }
+
+                        /* EXISTING JOKER DOT LOGIC */
                         const point = jokerPath.getPointAtLength(jokerPathLength * progress);
                         const rect = jokerSvg.getBoundingClientRect();
 
                         const x = rect.left + (point.x / 1000) * rect.width;
                         const y = rect.top + (point.y / 1000) * rect.height;
 
-                        jokerDot.style.left = `${x}px`; // Centered by subtracting half width
-                        jokerDot.style.top = `${y}px`; // Centered by subtracting half height
+                        jokerDot.style.left = `${x}px`;
+                        jokerDot.style.top = `${y}px`;
                     },
                     onEnter: () => {
                         jokerDot.style.opacity = "1";
@@ -177,35 +193,108 @@ export default function JokerSection() {
                     }
                 }
             });
-            jokerTl.set(scrollHintRef.current, { opacity: 1 });
 
-            jokerTl.to(scrollHintRef.current, {
-                opacity: 0,
-                duration: 0.8,
-                ease: "power2.out"
-            }, 0);
+            jokerTl.to({}, { duration: 0.5 });
 
             jokerTl.to(leftTitle, {
                 y: -40,
-                duration: 2,
+                duration: 1,
                 ease: "power2.out"
-            }, 0)
+            }, ">")
                 .to(rightTitle, {
                     y: 40,
-                    duration: 2,
+                    duration: 1,
                     ease: "power2.out"
                 }, "<");
 
             jokerTl.to(leftDoor, {
                 x: "-100%",
-                duration: 4,
-                ease: "expo.in"
+                duration: 2.5,
+                ease: "power2.inOut"
             }, "<")
                 .to(rightDoor, {
                     x: "100%",
-                    duration: 4,
-                    ease: "expo.in"
+                    duration: 2.5,
+                    ease: "power2.inOut"
                 }, "<");
+
+            gsap.set(exploreTitleRef.current, {
+                opacity: 0,
+                y: 80,
+                scale: 1.1,
+                color: "#9ca3af" // gray-400
+            });
+            jokerTl.to(exploreTitleRef.current, {
+                opacity: 1,
+                y: 40,
+                duration: 1.2,
+                ease: "power2.out"
+            }, "<+0.3");
+
+            jokerTl.to(exploreTitleRef.current, {
+                y: -window.innerHeight * 0.25,
+                scale: 1,
+                color: "#ffffff",
+                duration: 2.5,
+                ease: "power1.out"
+            }, ">+0.8");
+            jokerTl.to(exploreTitleRef.current, {
+                top: "6%",
+                y: 0,
+                duration: 1.8,
+                ease: "power2.inOut"
+            }, ">");
+
+            // if (exploreTitleRef.current) {
+            //   gsap.set(exploreTitleRef.current, {
+            //   opacity: 0,
+            //   y: 120,        // thoda aur niche (depth)
+            //   x: "-2%",
+            //   scale: 0.85,   // 👈 small start (KEY)
+            //   filter: "blur(6px)", // 👈 depth illusion
+            //   color: "#9ca3af",
+            // });
+
+
+            //   jokerTl.to(
+            //   exploreTitleRef.current,
+            //   {
+            //     opacity: 1,
+            //     y: 40,
+            //     scale: 1.18,        // 👈 dheere dheere bada
+            //     filter: "blur(0px)",
+            //     duration: 1.6,
+            //     ease: "power3.out", // 👈 smooth cinematic ease
+            //   },
+            //   "<+0.4" // doors thoda open hone ke baad
+            // );
+
+            //   // move up + turn white
+            //   jokerTl.to(exploreTitleRef.current, {
+            //   y: -window.innerHeight * 0.22,
+            //   scale: 1.05,
+            //   color: "#ffffff",
+            //   duration: 2.4,
+            //   ease: "power1.out",
+            // }, ">+0.6");
+
+
+            //   // lock at top, slightly smaller
+            //   jokerTl.to(exploreTitleRef.current, {
+            //   top: "8rem",
+            //   y: 0,
+            //   x: "-2%",
+            //   fontSize: "clamp(3.6rem, 6.5vw, 5.6rem)", // 👈 bigger than before
+            //   whiteSpace: "nowrap",                    // 👈 wrap OFF
+            //   lineHeight: "1",                         // 👈 tight single line
+            //   duration: 1.8,
+            //   ease: "power2.inOut",
+            // });
+
+            // }
+
+
+
 
             const getCardX = (i: number) => {
                 const vw = window.innerWidth;
@@ -215,8 +304,9 @@ export default function JokerSection() {
 
             const getCardY = (i: number) => {
                 const vh = window.innerHeight;
-                return [-0.1, -0.2, -0.05, -0.18][i] * vh;
+                return [-0.01, -0.05, 0, -0.06][i] * vh;
             };
+
 
             const getCardR = (i: number) => [-12, 6, -6, 12][i];
 
@@ -253,14 +343,10 @@ export default function JokerSection() {
 
             jokerTl.to(shuffledCards, {
                 rotateY: 180,
-                duration: 0.5,
+                duration: 1,
                 stagger: 2,
                 ease: "power1.inOut"
-            }, "+=0.3")
-                .to(shuffledCards, {
-                    duration: 1,
-                    ease: "none",
-                });
+            }, "+=0.5");
 
             setupCardHoverAnimations();
 
@@ -290,22 +376,6 @@ export default function JokerSection() {
         setupPaths();
     }, [setupPaths]);
 
-    useEffect(() => {
-        // subtle breathing animation (idle)
-        if (scrollHintRef.current) {
-            gsap.fromTo(
-                scrollHintRef.current,
-                { y: 0 },
-                {
-                    y: 10,
-                    duration: 1,
-                    ease: "power1.inOut",
-                    repeat: -1,
-                    yoyo: true,
-                }
-            );
-        }
-    })
     const cards = [
         { id: 'c1', name: 'Ace of Heart', image: '/Ace_Heart.png', day: 'Day 1', isRed: true },
         { id: 'c2', name: 'Ace of Clubs', image: '/Ace_Clubs.png', day: 'Day 2' },
@@ -319,8 +389,96 @@ export default function JokerSection() {
             id="jokerSection"
             ref={jokerSectionRef}
         >
+            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 z-20">
+                <div className="flex flex-col items-center">
+                    <span className="rotate-90 text-1xl text-black -mb-2">❯</span>
+                    <span className="rotate-90 text-1xl text-black -mb-2">❯</span>
+                    <span className="rotate-90 text-1xl text-black -mb-2">❯</span>
+                    <span className="rotate-90 text-1xl text-black">❯</span>
+                </div>
+            </div>
+
             <div className="joker-content relative top-0 h-screen overflow-hidden">
                 <div className="viewport-wrapper absolute inset-0 flex overflow-hidden z-10">
+                    {/* FULL IMAGE OVERLAY (INITIAL ONLY) */}
+                    {/* <div
+                        ref={fullImageRef}
+                        className="absolute inset-0 z-[101]"
+                        style={{
+                            background: "white url('/full1.png') no-repeat center center",
+                            backgroundSize: "contain",
+                        }}
+                    > */}
+                    {/* <div
+  ref={fullImageRef}
+  className="fixed inset-0 z-[101] flex items-center justify-center bg-white"
+>
+  <img
+    src="/fullsvg.svg"
+    alt="Full SVG"
+    className="w-[60%] max-w-[600px] h-auto object-contain translate-y-[140px] translate-x-[450px]"
+  /> */}
+{/* </div> */}
+<div
+  ref={fullImageRef}
+  className="fixed inset-0 z-[101] flex items-center justify-center bg-white"
+>
+  {/* Glow wrapper */}
+  <div
+    className="relative"
+    style={{
+      filter: "drop-shadow(0 0 80px rgba(120,120,120,0.65))",
+transition: "filter 0.4s ease",
+    }}
+  >
+    <Tilt
+      tiltMaxAngleX={6}
+      tiltMaxAngleY={6}
+      perspective={1200}
+      scale={1.03}
+      transitionSpeed={1500}
+      glareEnable={false}
+    >
+      <img
+        src="/fullsvg.svg"
+        alt="Full SVG"
+        className="
+          w-[60%]
+          max-w-[600px]
+          h-auto
+          object-contain
+          translate-y-[140px]
+          translate-x-[450px]
+        "
+      />
+    </Tilt>
+  </div>
+
+<div
+  className="
+    absolute
+    top-32
+    right-8
+    z-[110]
+    font-jqka
+    text-[clamp(0.8rem,1.5vw,1.5rem)]
+    tracking-[0.35em]
+    text-gray-500
+    pointer-events-none
+    opacity-80
+  "
+>
+  move your cursor
+</div>
+
+
+                        <div className="absolute bottom-[8%] w-full text-center font-joker
+                  text-[clamp(3.5rem,8vw,7rem)]
+                  tracking-[0.35em] text-black">
+                            <span className="inline-block joker-word">joker&apos;s</span>
+                            <span className="inline-block realm-word">realm</span>
+                        </div>
+                    </div>
                     <div
                         className="door door-left absolute top-0 w-1/2 h-full bg-white z-100"
                         id="leftDoor"
@@ -331,11 +489,22 @@ export default function JokerSection() {
                         }}
                     >
                         <div
-                            className="door-title left-title absolute bottom-8 w-full font-joker text-[clamp(3rem,7vw,5rem)] tracking-[0.35em] text-black pointer-events-none will-change-transform text-right"
+                            className="door-title left-title absolute bottom-8
+             right-0
+             font-joker
+             text-[clamp(3.5rem,8vw,7rem)]
+             tracking-[0.12em]
+             text-black
+             pointer-events-none
+             will-change-transform
+             text-right
+             pr-12"
                             ref={leftTitleRef}
                         >
                             joker&apos;s
                         </div>
+
+
                     </div>
 
                     <div
@@ -348,25 +517,95 @@ export default function JokerSection() {
                         }}
                     >
                         <div
-                            className="door-title right-title absolute bottom-8 w-full font-joker text-[clamp(3rem,7vw,5rem)] tracking-[0.35em] text-black pointer-events-none will-change-transform text-left pl-10"
+                            className="door-title right-title absolute bottom-8
+             left-0
+             font-joker
+             text-[clamp(3.5rem,8vw,7rem)]
+             tracking-[0.12em]
+             text-black
+             pointer-events-none
+             will-change-transform
+             text-left
+             pl-12"
                             ref={rightTitleRef}
                         >
                             realm
                         </div>
+
+
                     </div>
+
+
 
                     <div className="main-content absolute inset-0 flex flex-col items-center justify-center bg-black z-5">
                         <h1
-                            id="title2"
-                            className="font-joker text-center text-[clamp(3rem,8vw,8rem)] w-11/12 z-2 mb-8"
+                            ref={exploreTitleRef}
+                            className="font-joker text-center
+    text-[clamp(3rem,8vw,8rem)]
+    w-11/12
+    z-2
+    absolute
+    top-1/2
+    -translate-y-1/2
+    text-gray-500
+    will-change-transform
+    origin-center"
                         >
                             explore events
                         </h1>
+                        {/* <h1
+  ref={exploreTitleRef}
+  className="
+    font-joker
+    absolute
+    top-1/2
+    -translate-y-1/2
+    z-2
+    w-full
+    text-center
+    text-gray-500
+    leading-[0.9]
+    will-change-transform
+  "
+>
+  <span className="block text-[clamp(4rem,10vw,9rem)]">
+    explore
+  </span>
+  <span className="block text-[clamp(4rem,10vw,9rem)]">
+    events
+  </span>
+</h1> */}
 
-                        <div className="watermark-container absolute flex flex-col leading-[0.8] select-none z-1">
+                        {/* <h1
+  ref={exploreTitleRef}
+  className="
+    font-joker
+    absolute
+    top-1/2
+    left-1/2
+    -translate-x-1/2
+    -translate-y-1/2
+    z-20
+    text-center
+    leading-[0.95]
+    text-[clamp(4.5rem,12vw,10rem)]
+    max-w-[90vw]
+    text-gray-400
+    will-change-transform
+    origin-center
+  "
+>
+  explore events
+</h1> */}
+
+
+
+
+
+                        {/* <div className="watermark-container absolute flex flex-col leading-[0.8] select-none z-1">
                             <span className="watermark-text font-italic uppercase text-[clamp(4rem,12vw,10rem)] text-[rgba(128,128,128,0.12)]">Explore</span>
                             <span className="watermark-text font-italic uppercase text-[clamp(4rem,12vw,10rem)] text-[rgba(128,128,128,0.12)]">Events</span>
-                        </div>
+                        </div> */}
 
                         <svg
                             id="jokerPath"
@@ -389,7 +628,7 @@ export default function JokerSection() {
 
                         <div
                             id="jokerPathDot"
-                            className="fixed w-22.5 h-22.5 bg-[#ff3c3c] rounded-full blur-[30px] pointer-events-none z-5 opacity-0 -translate-x-1/2 -translate-y-1/2"
+                            className="fixed w-22.5 h-22.5 bg-[#CF0000] rounded-full blur-[30px] pointer-events-none z-5 opacity-0 -translate-x-1/2 -translate-y-1/2"
                             ref={jokerDotRef}
                         ></div>
 
@@ -429,21 +668,13 @@ export default function JokerSection() {
                                             }}
                                         >
                                             <h2 className="text-black text-2xl font-bold">{card.day}</h2>
-                                            <h2 className={card.isRed ? 'text-[#ff3c3c] text-2xl font-bold' : 'text-black text-2xl font-bold'}>{card.name}</h2>
+                                            <h2 className={card.isRed ? 'text-[#CF0000] text-2xl font-bold' : 'text-black text-2xl font-bold'}>{card.name}</h2>
                                         </div>
                                     </div>
                                 </div>
                             ))}
                         </div>
                     </div>
-                </div>
-                <div
-                    ref={scrollHintRef}
-                    className="scroll-hint fixed bottom-8 left-1/2 -translate-x-1/2 z-50
-               text-black rotate-90 text-[clamp(20px,4vw,36px)]
-               tracking-[-0.3rem] opacity-0 select-none pointer-events-none"
-                >
-                    &gt;&gt;&gt;&gt;
                 </div>
             </div>
         </div>

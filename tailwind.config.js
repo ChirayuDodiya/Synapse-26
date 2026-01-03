@@ -13,6 +13,7 @@ module.exports = {
         card: ["var(--font-card)"],
         joker: ["var(--font-joker)"],
         poppins: ["var(--font-poppins)"],
+         'jqka': ['var(--font-jqka)', 'sans-serif'],
       },
     },
   },
