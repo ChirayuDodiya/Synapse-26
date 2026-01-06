@@ -45,7 +45,7 @@ const ContactFooter: React.FC = () => {
                     <div className="flex sm:flex-row items-center justify-between mb-4 md:mb-10 md:mt-14">
                         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-0">Contact us</h1>
                         <Image
-                            src="/Logo_Synapse.png"
+                            src="/Synapse Logo.png"
                             alt="Synapse Header Logo"
                             width={50}
                             height={50}

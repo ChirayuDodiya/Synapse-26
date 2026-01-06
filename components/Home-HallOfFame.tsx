@@ -60,7 +60,7 @@ export default function HallOfFame() {
             <div
                 className="h-screen w-full bg-cover bg-center flex items-end"
                 style={{
-                    backgroundImage: 'url(/HallOfFame.png)'
+                    backgroundImage: 'url(/images_home/HallOfFame.png)'
                 }}
             />
             <div className="relative min-h-screen bg-black px-[10%] py-20 md:px-[5%] overflow-hidden">

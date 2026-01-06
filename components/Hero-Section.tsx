@@ -74,14 +74,14 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
     });
     const PRELOAD_ASSETS = [
         // Hero visuals
-        "/RedHand2.jpeg",
-        "/redcard4.png",
-        "/card_center.png",
+        "/images_home/RedHand2.jpeg",
+        "/images_home/redcard4.png",
+        "/images_home/card_center.png",
         "/Synapse_Music.mp3",
-        "/inkReveal2.gif",
+        "/images_home/inkReveal2.gif",
 
         // About section
-        "/Group_9.png",
+        "/images_home/Group_9.png",
     ];
 
     const updateProgressText = useCallback((progress: number) => {
@@ -126,7 +126,7 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
 
     const loadSVG = useCallback(async () => {
         try {
-            const res = await fetch("/uncolored2.svg");
+            const res = await fetch("/images_home/uncolored2.svg");
             if (!res.ok) throw new Error();
             const svgText = await res.text();
             if (svgContainerRef.current) {
@@ -636,30 +636,30 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
 
                     <div className="hero relative inset-0 h-screen z-25" ref={heroRef}>
                         <div id="maskLayer" className="absolute inset-0 opacity-100 " ref={maskLayerRef} style={{
-                            WebkitMaskImage: 'url("/inkReveal2.gif")',
+                            WebkitMaskImage: 'url("/images_home/inkReveal2.gif")',
                             WebkitMaskRepeat: 'no-repeat',
                             WebkitMaskPosition: 'center',
                             WebkitMaskSize: '0% 0%',
-                            maskImage: 'url("/inkReveal2.gif")',
+                            maskImage: 'url("/images_home/inkReveal2.gif")',
                             maskRepeat: 'no-repeat',
                             maskPosition: 'center',
                             maskSize: '0% 0%',
                         }}>
-                            <img id="coloredImage" src="/RedHand2.jpeg" alt="Red Hand" ref={coloredImageRef} className="absolute inset-0 h-full w-full object-cover pointer-events-none" />
+                            <img id="coloredImage" src="/images_home/RedHand2.jpeg" alt="Red Hand" ref={coloredImageRef} className="absolute inset-0 h-full w-full object-cover pointer-events-none" />
 
                             <div id="flipCard" className="absolute inset-0 transform-3d" ref={flipCardRef}>
-                                <img id="redCard" className="absolute inset-0 w-full h-full object-cover pointer-events-none backface-hidden" src="/redcard4.png" alt="Red Card" ref={cardRef} />
+                                <img id="redCard" className="absolute inset-0 w-full h-full object-cover pointer-events-none backface-hidden" src="/images_home/redcard4.png" alt="Red Card" ref={cardRef} />
 
                                 <div id="part3_2" ref={part3_2Ref} style={{
                                     backgroundImage:
-                                        "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 35%, rgba(0,0,0,0.45) 65%, rgba(0,0,0,0.75) 85%, #000 100%), url(/image_part3_2.jpg)",
+                                        "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 35%, rgba(0,0,0,0.45) 65%, rgba(0,0,0,0.75) 85%, #000 100%), url(/images_home/image_part3_2.jpg)",
                                     backgroundSize: "cover",
                                     backgroundPosition: "center",
                                 }} className=" absolute inset-0 flex flex-col items-center justify-center opacity-100 will-change-transform backface-hidden transform-[rotateY(180deg)]">
                                     <div className="screen-container relative w-screen h-screen flex items-center justify-center perspective-[1000px] transform-3d" ref={screenContainerRef}>
-                                        <div ref={frontScreenRef} className="screen-front absolute inset-0 bg-black bg-[url('/part3-image.png')] bg-no-repeat bg-center bg-contain z-2 backface-hidden border-4 border-solid rounded " style={{ borderColor: "rgba(250,235,215,0)" }}></div>
+                                        <div ref={frontScreenRef} className="screen-front absolute inset-0 bg-black bg-[url('/images_home/part3-image.png')] bg-no-repeat bg-center bg-contain z-2 backface-hidden border-4 border-solid rounded " style={{ borderColor: "rgba(250,235,215,0)" }}></div>
                                         <div className="center-joker-container absolute inset-0 flex items-center justify-center transform-[rotateY(180deg)] backface-hidden z-1">
-                                            <img src="/card_center.png" className="center-joker w-full h-auto rotate-[-64deg] object-contain" alt="Joker Card" />
+                                            <img src="/images_home/card_center.png" className="center-joker w-full h-auto rotate-[-64deg] object-contain" alt="Joker Card" />
                                         </div>
                                     </div>
                                 </div>
