@@ -37,14 +37,15 @@ export default function MerchPage() {
     <div className="w-full bg-black text-white min-h-screen">
 
       {/* HERO */}
-      <div className="relative w-full h-[460px] md:h-[520px] overflow-hidden">
+      {/* HERO */}
+      <div className="relative w-full h-[clamp(320px,55vh,520px)] overflow-hidden">
         <Navbar visible={true}>
           <NavigationPanel />
         </Navbar>
 
         <img
           src="/images_merch/merch-her.png"
-          className="absolute top-0 left-0 w-full h-full object-cover object-center"
+          className="absolute inset-0 w-full h-full object-cover"
           alt="Merch Hero"
         />
 
@@ -53,68 +54,104 @@ export default function MerchPage() {
         <img
           src="/images_merch/group 27.png"
           alt="Wear the Realm"
-          className="absolute z-30 left-[6%] bottom-[18%] w-[180px] md:w-[500px] h-auto"
+          className="
+      absolute z-30
+      left-[6%] bottom-[12%]
+      w-[clamp(140px,35vw,520px)]
+      h-auto
+    "
         />
       </div>
 
+
       {/* MERCH TITLE */}
-      <div className="w-full flex justify-center mt-10 md:mt-14 mb-25">
+      <div className="w-full flex justify-center mt-10 md:mt-14 mb-16">
         <img
           src="/images_merch/MERCH.png"
-          className="w-[clamp(260px,60vw,640px)]"
+          className="w-[clamp(220px,55vw,640px)]"
           alt="MERCHANDISE"
         />
       </div>
 
+
       {/* PRODUCT GRID */}
-      <div className="w-full px-6 mt-12 md:mt-16 mb-28 grid grid-cols-2 gap-y-16 gap-x-6 justify-items-center">
+      <div
+        className="
+    w-full px-4 sm:px-6 md:px-10
+    grid
+    grid-cols-2
+    sm:grid-cols-2
+    md:grid-cols-3
+    lg:grid-cols-4
+    gap-y-14
+    gap-x-6
+    justify-items-center
+    mb-28
+  "
+      >
+
 
         {products.map((product, i) => (
-          <div
-            key={i}
-            className="flex flex-col items-center"
-          >
+          <div key={i} className="flex flex-col items-center w-full max-w-[280px]">
             {/* IMAGE */}
             <img
               src={product.thumbnail}
-              className="w-[150px] md:w-[200px] rounded-sm object-cover"
+              className="
+      w-full
+      aspect-[3/4]
+      object-cover
+      rounded-sm
+    "
               alt={product.name}
             />
 
             {/* NAME + PRICE */}
             <div className="w-full flex justify-between items-start mt-3 px-1">
               <p
-                className="text-white/90 text-[13px] md:text-[16px] leading-snug w-[70%] font-jqka"
+                className="
+        text-white/90
+        text-[clamp(12px,3vw,16px)]
+        leading-snug
+        w-[70%]
+        font-jqka
+      "
               >
                 {product.name.split(" ").slice(0, 1).join(" ")}’26 <br />
                 {product.name.split(" ").slice(1).join(" ")}
               </p>
 
-              <p className="text-white text-[13px] md:text-[20px] font-jqka">
+              <p
+                className="
+        text-white
+        text-[clamp(13px,3.5vw,20px)]
+        font-jqka
+      "
+              >
                 ₹ {product.price}
               </p>
             </div>
 
             {/* BUY NOW */}
-            <Link href={`/merchandise/${product.slug}`}>
+            <Link href={`/merchandise/${product.slug}`} className="w-full">
               <button
                 className="
-                  mt-4 w-[170px] md:w-[200px]
-                  border border-white 
-                  py-2.5 md:py-3
-                  rounded-sm 
-                  text-[14px] md:text-[16px]
-                  tracking-wide
-                  font-jqka
-                  hover:bg-white hover:text-black
-                  transition-all duration-200
-                "
-
+        mt-4
+        w-full
+        border border-white
+        py-2.5 md:py-3
+        rounded-sm
+        text-[clamp(13px,3vw,16px)]
+        tracking-wide
+        font-jqka
+        hover:bg-white hover:text-black
+        transition-all duration-200
+      "
               >
                 Buy Now
               </button>
             </Link>
           </div>
+
         ))}
 
       </div>

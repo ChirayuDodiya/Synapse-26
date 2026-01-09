@@ -12,7 +12,6 @@ import Link from "next/link";
 
 import React, { useRef, useState } from "react";
 
-
 interface NavbarProps {
   children: React.ReactNode;
   className?: string;
@@ -49,6 +48,7 @@ interface MobileNavMenuProps {
   className?: string;
   isOpen: boolean;
   onClose: () => void;
+  menuRef?: React.RefObject<HTMLDivElement>;
 }
 
 interface AnimatedMenuItemProps {
@@ -259,18 +259,22 @@ export const MobileNavMenu = ({
   className,
   isOpen,
   onClose,
+  menuRef,
 }: MobileNavMenuProps) => {
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
+          ref={menuRef}
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           className={cn(
-            "absolute inset-x-0 top-16 z-50 flex w-[95%] flex-col left-1/2 -translate-x-1/2 items-start justify-start gap-4 rounded-lg bg-black/95 px-4 py-8 border border-white/10 shadow-[0_4px_30px_rgba(235,0,0,0.15)]",
+            "absolute inset-x-0 top-16 max-h-[70vh] overflow-y-auto z-150 flex w-[95%] flex-col left-1/2 -translate-x-1/2 items-start justify-start gap-4 rounded-lg bg-black/95 px-4 py-8 border border-white/10 shadow-[0_4px_30px_rgba(235,0,0,0.15)] overscroll-contain",
             className,
           )}
+          onWheel={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
         >
           {children}
         </motion.div>

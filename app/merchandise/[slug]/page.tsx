@@ -70,6 +70,7 @@ export default function ProductPage() {
     const { slug } = useParams();
     const [quantity, setQuantity] = useState(1);
     const [activeImage, setActiveImage] = useState(0);
+    const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
     const product = PRODUCTS.find((p) => p.slug === slug);
     if (!product) return null;
@@ -147,16 +148,28 @@ export default function ProductPage() {
                     <p className="text-green-400 text-2xl">₹ {product.price}</p>
 
                     {/* SIZES */}
-                    <div className="flex gap-2">
-                        {product.sizes.map((s) => (
-                            <div
-                                key={s}
-                                className="px-3 py-1 border border-white cursor-pointer hover:bg-white hover:text-black transition"
-                            >
-                                {s}
-                            </div>
-                        ))}
+                    <div className="flex gap-2 flex-wrap">
+                        {product.sizes.map((s) => {
+                            const isSelected = selectedSize === s;
+
+                            return (
+                                <button
+                                    key={s}
+                                    onClick={() => setSelectedSize(s)}
+                                    className={`
+          px-3 py-1 border cursor-pointer transition-all duration-200
+          ${isSelected
+                                            ? "bg-white text-black border-white"
+                                            : "border-white text-white hover:bg-white hover:text-black"
+                                        }
+        `}
+                                >
+                                    {s}
+                                </button>
+                            );
+                        })}
                     </div>
+
 
                     {/* QUANTITY */}
                     <div className="flex items-center gap-3 mt-4">
@@ -185,8 +198,9 @@ export default function ProductPage() {
     font-jqka
     hover:bg-white hover:text-black
     transition
-    mx-auto md:mx-0
+    mx-auto md:mx-0 cursor-pointer
   "
+  onClick={(event) => {alert("Payment Gateway yet not connected")}}
 
                     >
                         Buy Now

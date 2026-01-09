@@ -216,25 +216,3 @@ html.lenis body {
 .animate-fadeIn {
   animation: fadeIn 0.5s ease-out forwards;
 }
-
-@keyframes equalizerWeighted {
-  0% {
-    transform: scaleY(calc(var(--base-scale) * 0.6));
-  }
-
-  25% {
-    transform: scaleY(calc(var(--base-scale) * 1.4));
-  }
-
-  50% {
-    transform: scaleY(calc(var(--base-scale) * 0.8));
-  }
-
-  75% {
-    transform: scaleY(calc(var(--base-scale) * 1.25));
-  }
-
-  100% {
-    transform: scaleY(calc(var(--base-scale) * 0.6));
-  }
-}

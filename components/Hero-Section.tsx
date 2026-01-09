@@ -9,6 +9,7 @@ import {
     NavbarButton
 } from "@/components/ui/Resizable-navbar";
 import NavigationPanel from '@/components/ui/NavigationPanel';
+import Svg from "@/components/Svg";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -125,32 +126,11 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
     }, []);
 
     const loadSVG = useCallback(async () => {
-        try {
-            const res = await fetch("/images_home/uncolored2.svg");
-            if (!res.ok) throw new Error();
-            const svgText = await res.text();
-            if (svgContainerRef.current) {
-                svgContainerRef.current.innerHTML = svgText;
-            }
-        } catch {
-            if (svgContainerRef.current) {
-                svgContainerRef.current.innerHTML = `
-                    <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M100 100h600v400H100z" />
-                        <circle cx="400" cy="300" r="120" />
-                    </svg>
-                `;
-            }
-        }
-
         const svg = svgContainerRef.current?.querySelector("svg");
         if (svg) {
-            svg.setAttribute("width", "100%");
-            svg.setAttribute("height", "100%");
             svg.style.width = "100%";
             svg.style.height = "100%";
-            svg.setAttribute("preserveAspectRatio", "xMidYMid slice");
-            const pathsArray = Array.from(svg.querySelectorAll("path, circle")) as SVGPathElement[];
+            const pathsArray = Array.from(svg.querySelectorAll("path")) as SVGPathElement[];
             assetsRef.current.paths = pathsArray;
 
             pathsArray.forEach(p => {
@@ -162,25 +142,10 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
                 p.style.strokeDasharray = `${len}`;
                 p.style.strokeDashoffset = `${len}`;
                 (p as any).dataset.len = len;
+                p.style.opacity = '1';
             });
-
         }
     }, []);
-    async function decodeImages(urls: string[]) {
-        const imageUrls = urls.filter(src =>
-            /\.(png|jpg|jpeg|gif|webp)$/i.test(src)
-        );
-
-        await Promise.all(
-            imageUrls.map(async (src) => {
-                const res = await fetch(src);
-                const blob = await res.blob();
-
-                // Forces decode + rasterization
-                await createImageBitmap(blob);
-            })
-        );
-    }
 
     const revealFill = useCallback(() => {
         updateProgressText(1);
@@ -197,6 +162,49 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
 
     const FINISH_EASE = 0.25;
     const FINISH_THRESHOLD = 0.99;
+    const observeBrowserLoading = (onProgress: (p: number) => void, onDone: () => void) => {
+        let totalBytes = 0;
+        let loadedBytes = 0;
+        let seen = new Set<string>();
+
+        const update = () => {
+            const entries = performance.getEntriesByType("resource") as PerformanceResourceTiming[];
+
+            totalBytes = 0;
+            loadedBytes = 0;
+
+            entries.forEach(e => {
+                if (!e.name) return;
+
+                totalBytes += e.transferSize || e.decodedBodySize || 0;
+
+                if (e.responseEnd > 0) {
+                    loadedBytes += e.transferSize || e.decodedBodySize || 0;
+                }
+            });
+
+            const progress = totalBytes === 0 ? 0 : loadedBytes / totalBytes;
+            onProgress(Math.min(progress, 1));
+        };
+
+        const observer = new PerformanceObserver(list => {
+            list.getEntries().forEach(entry => {
+                if (!seen.has(entry.name)) {
+                    seen.add(entry.name);
+                    update();
+                }
+            });
+        });
+
+        observer.observe({ entryTypes: ["resource"] });
+
+        // Final check when page fully loaded
+        window.addEventListener("load", () => {
+            update();
+            onDone();
+            observer.disconnect();
+        });
+    };
 
     const drawStroke = useCallback(() => {
         const now = Date.now();
@@ -253,52 +261,23 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
         requestAnimationFrame(drawStroke);
     }, [updateProgressText, revealFill]);
 
-    const loadAssets = useCallback(async () => {
-        // Reset loader state
-        assetsRef.current.loaded = 0;
-        assetsRef.current.total = PRELOAD_ASSETS.length;
-        assetsRef.current.assetProgress = 0;
+    const startBrowserPreloadTracking = useCallback(() => {
+        assetsRef.current.strokeProgress = 0;
         assetsRef.current.finished = false;
 
-        // 1️⃣ Start SVG loader immediately
         loadSVG().then(() => {
             assetsRef.current.strokeStartTime = Date.now();
             drawStroke();
         });
 
-        // 2️⃣ REAL preload (decode + bitmap)
-        try {
-            await decodeImages(PRELOAD_ASSETS);
-        } catch (e) {
-            console.warn("Image decode preload failed", e);
-        }
-
-        const markLoaded = () => {
-            assetsRef.current.loaded += 1;
-            assetsRef.current.assetProgress = Math.min(
-                1,
-                assetsRef.current.loaded / assetsRef.current.total
-            );
-        };
-
-        PRELOAD_ASSETS.forEach(src => {
-            if (/\.(png|jpg|jpeg|gif|svg|webp)$/i.test(src)) {
-                const img = new Image();
-                img.src = src;
-                img.complete ? markLoaded() : (img.onload = img.onerror = markLoaded);
-                return;
+        observeBrowserLoading(
+            (progress) => {
+                assetsRef.current.assetProgress = progress;
+            },
+            () => {
+                assetsRef.current.assetProgress = 1;
             }
-
-            if (/\.(mp3|wav|ogg|mp4|webm)$/i.test(src)) {
-                const media = document.createElement("audio");
-                media.src = src;
-                media.preload = "auto";
-
-                media.readyState >= 3
-                    ? markLoaded()
-                    : media.addEventListener("canplaythrough", markLoaded, { once: true });
-            }
-        });
+        );
     }, [loadSVG, drawStroke]);
 
     const lockScroll = useCallback(() => {
@@ -559,7 +538,7 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
         window.addEventListener("beforeunload", clearIntroOnReload);
 
         requestAnimationFrame(() => {
-            loadAssets();
+            startBrowserPreloadTracking();
         });
 
         if (!isLoading) {
@@ -586,7 +565,7 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
                 requestAnimationFrame(() => {
                     const audio = audioRef.current;
                     if (!check || !audio) return;
-                    
+
                     audio.muted = false;
                     audio.volume = 0;
                     audio.play().catch(() => { });
@@ -615,7 +594,9 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
 
     return (
         <div>
-            <div id="svgContainer" className="fixed inset-0 z-10 transition-opacity duration-2400" ref={svgContainerRef} />
+            <div id="svgContainer" className="fixed inset-0 z-10 transition-opacity duration-2400" ref={svgContainerRef} >
+                <Svg />
+            </div>
 
             {isLoading ? (
                 <>

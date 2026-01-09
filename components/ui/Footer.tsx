@@ -15,17 +15,11 @@ const ContactFooter: React.FC = () => {
         }
       `}</style>
 
-            <video
-                className="absolute inset-0 w-full h-full object-cover"
-                autoPlay
-                muted
-                loop
-                playsInline
-                id="bgVideo"
-            >
-                <source src="/FooterFirework.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-            </video>
+            <img
+                src="/FooterFirework.gif"
+                alt="Firework animation"
+                className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+            />
 
             <div className="absolute inset-0 bg-black/20 z-10" aria-hidden="true" />
 
@@ -37,7 +31,6 @@ const ContactFooter: React.FC = () => {
                         width={1920}
                         height={400}
                         className="w-full top-0 h-auto object-contain"
-                        priority
                     />
                 </div>
 
@@ -68,7 +61,7 @@ const ContactFooter: React.FC = () => {
                                 <span className="font-semibold">Rujal Jiyani:</span>
                                 <Link href="tel:+919499549977" className="ml-1 hover:text-indigo-300 transition-colors duration-200">
                                     +91 94995 49977
-                                </Link><br/>
+                                </Link><br />
                                 <pre>(Events Head)</pre>
                             </div>
 

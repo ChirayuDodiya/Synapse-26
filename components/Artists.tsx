@@ -246,6 +246,7 @@ export default function ArtistsSection() {
                             >
                                 <img
                                     src={artist.image}
+                                    loading='lazy'
                                     alt={artist.name}
                                     className="block object-cover z-10 transition-transform duration-300 md:hover:scale-110"
                                     style={{
