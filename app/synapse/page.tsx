@@ -33,7 +33,7 @@ export default function HomeSection() {
             overflow-x-hidden
             w-full
             flex-col
-            relative
+            z-30
             mt-[300vh]
             transition-opacity
             duration-700

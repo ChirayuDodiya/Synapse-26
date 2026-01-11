@@ -124,7 +124,7 @@ export default function UserProfile() {
           {/* EVENTS */}
           <h2 className="text-4xl font-bold mb-6">Registered Events</h2>
 
-          <div className="space-y-4 max-h-[265px] overflow-y-auto pr-2 mb-10 thin-scrollbar">
+          <div className="space-y-4 max-h-[265px] overflow-y-auto pr-2 mb-10 thin-scrollbar overscroll-contain">
             {registeredEvents.map((event) => (
               <div key={event.id} className="animate border border-white p-4">
                 <div className="flex justify-between gap-4">

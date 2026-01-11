@@ -3,25 +3,73 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Image from "next/image"
 
 gsap.registerPlugin(ScrollTrigger);
 
-interface Artist {
+type Artist = {
     name: string;
     date: string;
-    image: string;
-}
+    image: {
+        avif?: string;
+        fallback: string;
+    };
+};
 
 export default function ArtistsSection() {
     const [currentIndex, setCurrentIndex] = useState(0);
+
     const [artists] = useState<Artist[]>([
-        { name: "Sartek", date: "21 Feb 2025", image: "/images_home/DJSartek.avif" },
-        { name: "Mohit Chauhan", date: "23 Feb 2025", image: "/images_home/MohitChauhan.jpg" },
-        { name: "Nikhil D' Souza", date: "21 Feb 2025", image: "/images_home/NikhilDSouza.jpg" },
-        { name: "Shaan", date: "22 Feb 2025", image: "/images_home/Shaan.jpg" },
-        { name: "Teri Miko", date: "22 Feb 2025", image: "/images_home/TeriMiko.jpg" },
-        { name: "Ravi Gupta", date: "20 Feb 2025", image: "/images_home/RaviGupta.jpg" }
+        {
+            name: "Sartek",
+            date: "21 Feb 2025",
+            image: {
+                avif: "/images_home/DJSartek.avif",
+                fallback: "/images_home/DJSartek.jpg",
+            },
+        },
+        {
+            name: "Mohit Chauhan",
+            date: "23 Feb 2025",
+            image: {
+                avif: "/images_home/MohitChauhan.avif",
+                fallback: "/images_home/MohitChauhan.jpg",
+            },
+        },
+        {
+            name: "Nikhil D' Souza",
+            date: "21 Feb 2025",
+            image: {
+                avif: "/images_home/NikhilDSouza.avif",
+                fallback: "/images_home/NikhilDSouza.jpg",
+            },
+        },
+        {
+            name: "Shaan",
+            date: "22 Feb 2025",
+            image: {
+                avif: "/images_home/Shaan.avif",
+                fallback: "/images_home/Shaan.jpg",
+            },
+        },
+        {
+            name: "Teri Miko",
+            date: "22 Feb 2025",
+            image: {
+                avif: "/images_home/TeriMiko.avif",
+                fallback: "/images_home/TeriMiko.jpg",
+            },
+        },
+        {
+            name: "Ravi Gupta",
+            date: "20 Feb 2025",
+            image: {
+                avif: "/images_home/RaviGupta.avif",
+                fallback: "/images_home/RaviGupta.jpg",
+            },
+        },
     ]);
+
 
     const artistSectionRef = useRef<HTMLDivElement>(null);
     const artistSvgRef = useRef<SVGSVGElement>(null);
@@ -37,7 +85,7 @@ export default function ArtistsSection() {
         const sx = 1000 / w;
         const sy = 1000 / h;
         const startX = (w / 2) * sx;
-        const startY = 0;
+        const startY = 1;
         const endX = (w / 2) * sx;
         const endY = 1000;
         const c1x = (w * 0.15) * sx;
@@ -188,11 +236,11 @@ export default function ArtistsSection() {
 
     return (
         <div
-            className="artists-section relative bg-white h-screen"
+            className="artists-section relative bg-black h-screen"
             id="artistsSection"
             ref={artistSectionRef}
         >
-            <div className="artists-content relative top-0 h-full flex flex-col">
+            <div className="artists-content relative top-[-1.2px] right-[-1.6px] h-full flex flex-col">
                 <svg
                     id="artistPath"
                     width="100%"
@@ -205,27 +253,26 @@ export default function ArtistsSection() {
                 >
                     <path
                         id="artistSvgPath"
-                        stroke="black"
+                        stroke="white"
                         strokeWidth="2"
                         fill="none"
-                        opacity="0.3"
                         ref={artistPathRef}
                     />
                 </svg>
 
                 <h1
                     id="artistsTitle"
-                    className="font-joker text-[clamp(3rem,12vw,7.5rem)] px-8 leading-none text-black lowercase text-center pt-8"
+                    className="font-joker text-[clamp(3rem,12vw,7.5rem)] px-8 leading-none text-white lowercase text-center pt-8"
                 >
                     ARTISTS
                 </h1>
 
                 <div className="carousel relative flex-1 overflow-hidden flex items-center justify-center">
-                    <div className="black-line absolute left-0 right-0 top-[45%] h-1 bg-black -translate-y-1/2 z-0"></div>
+                    <div className="black-line absolute left-0 right-0 top-[45%] h-1 bg-white -translate-y-1/2 z-0"></div>
 
                     <div
                         id="artistPathDot"
-                        className="fixed w-22.5 h-22.5 bg-[#ff3c3c] rounded-full blur-[30px] pointer-events-none z-5 opacity-0 -translate-x-1/2 -translate-y-1/2"
+                        className="fixed w-22.5 h-22.5 bg-[#ff0000] rounded-full blur-[20px] pointer-events-none z-5 opacity-0 -translate-x-1/2 -translate-y-1/2"
                         ref={artistDotRef}
                     ></div>
 
@@ -244,22 +291,32 @@ export default function ArtistsSection() {
                                     resetCarouselTimer();
                                 }}
                             >
-                                <img
-                                    src={artist.image}
-                                    loading='lazy'
-                                    alt={artist.name}
-                                    className="block object-cover z-10 transition-transform duration-300 md:hover:scale-110"
-                                    style={{
-                                        width: i === currentIndex
-                                            ? 'clamp(260px, 42vw, 520px)'
-                                            : 'clamp(110px, 18vw, 230px)',
-                                        height: i === currentIndex
-                                            ? 'clamp(200px, 30vw, 420px)'
-                                            : 'clamp(85px, 20vw, 230px)'
-                                    }}
-                                />
+                                <picture>
+                                    {artist.image.avif && (
+                                        <source srcSet={artist.image.avif} type="image/avif" />
+                                    )}
+
+                                    <img
+                                        src={artist.image.fallback}
+                                        alt={artist.name}
+                                        loading='lazy'
+                                        className="block object-cover z-10 transition-transform duration-300 md:hover:scale-110"
+                                        style={{
+                                            width:
+                                                i === currentIndex
+                                                    ? "clamp(260px, 42vw, 520px)"
+                                                    : "clamp(110px, 18vw, 230px)",
+                                            height:
+                                                i === currentIndex
+                                                    ? "clamp(200px, 30vw, 420px)"
+                                                    : "clamp(85px, 20vw, 230px)",
+                                        }}
+                                        sizes="(max-width: 768px) 80vw, 520px"
+                                    />
+                                </picture>
+
                                 {i === currentIndex && (
-                                    <div className="mt-4 border-t-2 border-b-2 border-black py-2 px-6 bg-white text-center text-black">
+                                    <div className="mt-4 border-t-2 border-b-2 border-white py-2 px-6 text-center text-white">
                                         <h2 className="text-2xl md:text-5xl font-jqka uppercase">
                                             {artist.name}
                                         </h2>
@@ -277,7 +334,7 @@ export default function ArtistsSection() {
     group
     absolute top-[45%] -translate-y-1/2
     flex items-center justify-center
-    bg-red-600 hover:bg-black
+    bg-red-600 hover:bg-white
     transition-colors duration-400
     z-20 cursor-pointer
   "
@@ -290,7 +347,7 @@ export default function ArtistsSection() {
                     >
                         <div
                             className="
-      bg-black
+      bg-white
       group-hover:bg-red-600
       transition-colors duration-400
       rotate-270
@@ -306,7 +363,7 @@ export default function ArtistsSection() {
 
                     <button
                         className="group absolute top-[45%] -translate-y-1/2
-              bg-red-600 hover:bg-black
+              bg-red-600 hover:bg-white
       transition-colors duration-400
              flex items-center justify-center transition z-20 cursor-pointer"
                         onClick={nextArtist}
@@ -317,7 +374,7 @@ export default function ArtistsSection() {
                         }}
                     >
                         <div
-                            className="w-8.25 h-5.5 bg-black 
+                            className="w-8.25 h-5.5 bg-white
       group-hover:bg-red-600 -rotate-270
       transition-colors duration-400"
                             style={{

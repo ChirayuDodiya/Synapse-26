@@ -3,7 +3,6 @@ import { Geist, Geist_Mono, Bebas_Neue, Inter, Roboto, Poppins } from "next/font
 import { SmoothScroller } from "@/components/ui/SmoothScroller";
 import Script from 'next/script'
 import "./globals.css";
-import FluidCanvas from "@/components/FluidCanvas";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -63,7 +62,6 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${inter.variable} ${roboto.variable} ${poppins.variable} antialiased bg-black`}
       >
         <SmoothScroller >
-          {/* <FluidCanvas /> */}
           {children}
         </SmoothScroller>
       </body>

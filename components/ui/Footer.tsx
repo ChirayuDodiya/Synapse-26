@@ -15,9 +15,13 @@ const ContactFooter: React.FC = () => {
         }
       `}</style>
 
-            <img
+            <Image
                 src="/FooterFirework.gif"
                 alt="Firework animation"
+                width={426}
+                height={240}
+                priority={true}
+                fetchPriority='high'
                 className="absolute inset-0 w-full h-full object-cover pointer-events-none"
             />
 

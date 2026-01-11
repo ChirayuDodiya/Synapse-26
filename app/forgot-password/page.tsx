@@ -9,17 +9,20 @@ export default function ForgotPasswordPage() {
       {/* Left Side - Image */}
       <div className="hidden lg:flex lg:w-1/2 relative">
         <Image src="/joker.jpg" alt="Joker Cards Background" fill className="object-cover" priority />
-        
+
         <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-r from-transparent to-black pointer-events-none" />
         <div className="absolute top-8 left-8 z-10">
           <div className="relative w-16 h-16">
-            <Image
-              src="/Synapse Logo.png"
-              alt="Synapse Logo"
-              fill
-              className="object-contain"
-              priority
-            />
+            <Link
+              href="/">
+              <Image
+                src="/Synapse Logo.png"
+                alt="Synapse Logo"
+                fill
+                className="object-contain"
+                priority
+              />
+            </Link>
           </div>
         </div>
       </div>

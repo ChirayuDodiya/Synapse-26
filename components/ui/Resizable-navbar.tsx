@@ -10,7 +10,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, forwardRef } from "react";
 
 interface NavbarProps {
   children: React.ReactNode;
@@ -48,7 +48,6 @@ interface MobileNavMenuProps {
   className?: string;
   isOpen: boolean;
   onClose: () => void;
-  menuRef?: React.RefObject<HTMLDivElement>;
 }
 
 interface AnimatedMenuItemProps {
@@ -77,7 +76,6 @@ export const Navbar = ({
     </motion.div>
   );
 };
-
 
 export const NavBody = ({ children, className, visible }: NavBodyProps) => {
   return (
@@ -160,7 +158,7 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
         damping: 50,
       }}
       className={cn(
-        "relative z-50 mx-auto flex w-full flex-col items-center justify-between bg-black px-4 py-3 ",
+        "relative z-50 mx-auto flex w-full flex-col items-center justify-between px-4 py-3 ",
         visible,
         className,
       )}
@@ -254,18 +252,18 @@ export const MobileNavHeader = ({
   );
 };
 
-export const MobileNavMenu = ({
-  children,
-  className,
-  isOpen,
-  onClose,
-  menuRef,
-}: MobileNavMenuProps) => {
+export const MobileNavMenu = forwardRef<
+  HTMLDivElement,
+  MobileNavMenuProps
+>(function MobileNavMenu(
+  { children, className, isOpen },
+  ref
+) {
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          ref={menuRef}
+          ref={ref}
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
@@ -281,7 +279,7 @@ export const MobileNavMenu = ({
       )}
     </AnimatePresence>
   );
-};
+});
 
 export const MobileNavToggle = ({
   isOpen,
@@ -315,46 +313,59 @@ export const NavbarLogo = () => {
   );
 };
 
-type NavbarButtonProps<T extends React.ElementType> = {
-  as?: T;
-  href?: string;
-  children: React.ReactNode;
-  className?: string;
-  variant?: "primary" | "secondary" | "dark" | "gradient" | "register";
-} & Omit<React.ComponentPropsWithoutRef<T>, "as" | "children">;
+type NavbarVariant =
+  | "primary"
+  | "secondary"
+  | "dark"
+  | "gradient"
+  | "register";
 
-export const NavbarButton = <T extends React.ElementType = "a">({
+interface NavbarButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  href?: string;
+  variant?: NavbarVariant;
+}
+export const NavbarButton: React.FC<NavbarButtonProps> = ({
   href,
-  as,
   children,
   className,
   variant = "primary",
   ...props
-}: NavbarButtonProps<T>) => {
-  const Tag = as || "a";
-
+}) => {
   const baseStyles =
     "px-6 py-2 rounded-[10px] text-sm font-bold relative cursor-pointer transition-all duration-300 inline-block text-center font-['Roboto',sans-serif]";
 
-  const variantStyles = {
+  const variantStyles: Record<NavbarVariant, string> = {
     primary:
       "bg-transparent text-white border-2 border-white shadow-[6px_6px_0px_#EB0000] hover:bg-[#EB0000] hover:text-black hover:border-black hover:shadow-[6px_6px_0px_rgba(255,255,255,0.7)] hover:-translate-y-0.5",
-    secondary: "bg-transparent text-white/80 hover:text-white border-0",
+
+    secondary:
+      "bg-transparent text-white/80 hover:text-white border-0",
+
     dark:
       "bg-black text-white border-2 border-white shadow-[6px_6px_0px_#EB0000] hover:bg-[#EB0000] hover:text-black hover:border-black",
+
     gradient:
       "bg-transparent text-white border-2 border-white shadow-[6px_6px_0px_#EB0000] hover:bg-[#EB0000] hover:text-black hover:border-black hover:shadow-[6px_6px_0px_rgba(255,255,255,0.7)] hover:-translate-y-0.5 hover:scale-105",
+
     register:
       "text-[clamp(1.25rem,4vw,1.875rem)] border-[5px] border-white rounded-[10px] bg-transparent text-white shadow-[10px_10px_0px_#EB0000] hover:bg-[#EB0000] hover:text-black hover:border-black hover:scale-105 hover:shadow-[10px_10px_0px_rgba(255,255,255,0.7)] font-normal font-jqka",
   };
 
-  return React.createElement(
-    Tag,
-    {
-      ...(href ? { href } : {}),
-      className: cn(baseStyles, variantStyles[variant], className),
-      ...props,
-    },
-    children
+  const button = (
+    <button
+      className={cn(baseStyles, variantStyles[variant], className)}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+
+  if (!href) return button;
+
+  return (
+    <Link href={href} prefetch>
+      {button}
+    </Link>
   );
 };

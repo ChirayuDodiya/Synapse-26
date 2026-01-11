@@ -12,15 +12,18 @@ import {
 
 
 const navItems = [
-    { name: "Home", link: "/" },
-    { name: "About Us", link: "/about" },
-    { name: "Events", link: "/events" },
-    { name: "Pronite", link: "/pronite" },
-    { name: "Timeline", link: "/timeline" },
-    { name: "Terms And Conditions", link: "/terms-and-conditions" },
-    { name: "Merchandise", link: "/merchandise" },
-    { name: "Sponsors", link: "/sponsors" },
-    { name: "Contact Us", link: "#contact", isContact: true },
+    { name: "home", link: "/" },
+    { name: "about us", link: "/about" },
+    { name: "events", link: "/events" },
+    { name: "pronite", link: "/pronite" },
+    { name: "timeline", link: "/timeline" },
+    { name: "user profile", link: "/user-profile" },
+    { name: "accomodation", link: "/accomodation" },
+    { name: "merchandise", link: "/merchandise" },
+    { name: "sponsors", link: "/sponsors" },
+    { name: "terms and conditions", link: "/terms-and-conditions" },
+    { name: "contact us", link: "#contact", isContact: true },
+    { name: "register", link: "/register" },
 ];
 
 export default function NavigationPanel() {
@@ -96,7 +99,7 @@ export default function NavigationPanel() {
                 </MobileNavHeader>
 
                 <MobileNavMenu
-                    menuRef={menuRef}
+                    ref={menuRef}
                     isOpen={mobileMenuOpen}
                     onClose={() => setMobileMenuOpen(false)}
                 >

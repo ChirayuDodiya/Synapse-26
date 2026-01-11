@@ -49,11 +49,11 @@ export default function EventsPage() {
 
     return (
         <>
-            <Navbar visible={true}>
+            <Navbar visible>
                 <NavigationPanel />
             </Navbar>
+
             <main className="bg-black text-white overflow-x-hidden">
-                {/* HERO */}
                 <section className="relative h-[45vh] w-full">
                     <Image
                         src="/top.jpg"
@@ -66,112 +66,142 @@ export default function EventsPage() {
                     <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/60 to-black" />
                 </section>
 
-                {/* TITLE */}
                 <section className="relative py-10">
-                    <h1 className="text-center text-8xl tracking-[0.3em] lowercase font-joker">
+                    <h1 className="text-center text-[3rem] sm:text-[4.5rem] lg:text-8xl tracking-[0.2em] sm:tracking-[0.25em] lg:tracking-[0.3em] lowercase font-joker">
                         events
                     </h1>
 
-                    <button
-                        onClick={toggleRevealAll}
-                        className="absolute right-10 top-1/2 -translate-y-1/2
-                     text-xs opacity-80 text-right leading-relaxed select-none font-joker"
-                    >
-                        <div>👁 Reveal / Unreveal all</div>
-                        <div>* Tap on card to reveal</div>
-                    </button>
+                    <div
+                        className=" absolute right-4 sm:right-6 lg:right-10 top-full mt-4 sm:mt-6 text-right leading-snug select-none font-joker ">
+                        <button
+                            onClick={toggleRevealAll}
+                            className=" block text-[10px] sm:text-xs md:text-sm opacity-80 hover:opacity-100 transition-opacity ">
+                            👁 Reveal / Unreveal all
+                        </button>
+
+                        <div
+                            className=" mt-1 text-[9px] sm:text-[10px] md:text-xs opacity-60 ">
+                            Tap on card to reveal
+                        </div>
+                    </div>
+
                 </section>
 
-                {/* CARDS — CROSS PATTERN */}
-                <section className="px-24 py-40">
-                    <div className="grid grid-cols-3 auto-rows-[600px]">
+                {/* CARDS */}
+                <section className="px-4 sm:px-10 lg:px-24 py-20 sm:py-28 lg:py-40">
+                    <div
+                        className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-0 md:gap-x-6 lg:gap-x-10 gap-y-16 md:gap-y-12 lg:gap-y-4">
+
+
                         {EVENTS.map((event, index) => {
                             const isFlipped = revealAll || revealed[event.slug];
 
                             return (
-                                < React.Fragment key={event.slug} >
+                                <React.Fragment key={event.slug}>
                                     <div className="flex justify-center">
                                         <div
                                             onClick={() => handleCardClick(event.slug)}
-                                            className={`relative w-[700px] h-[600px] cursor-pointer ${isFlipped ? "group" : ""
-                                                }`}
+                                            className={`relative cursor-pointer transform-gpu  ${isFlipped ? "group" : ""}`}
                                             style={{ perspective: "1500px" }}
                                         >
+                                            {/* CARD FRAME — driven by PNG ratio */}
                                             <div
-                                                className="relative w-full h-full transition-transform ease-in-out"
-                                                style={{
-                                                    transformStyle: "preserve-3d",
-                                                    transitionDuration: "900ms",
-                                                    transform: isFlipped
-                                                        ? "rotateY(180deg)"
-                                                        : "rotateY(0deg)",
-                                                }}
+                                                className="
+    relative
+    w-[200px]
+    sm:w-[320px]
+    md:w-[280px]
+    lg:w-[340px]
+    xl:w-[420px]
+    aspect-[457/640]
+  "
                                             >
-                                                {/* FRONT */}
-                                                <div
-                                                    className="absolute inset-0"
-                                                    style={{ backfaceVisibility: "hidden" }}
-                                                >
-                                                    <Image
-                                                        src="/images_events/card.png"
-                                                        alt=""
-                                                        fill
-                                                        sizes="(max-width: 768px) 100vw, 700px"
-                                                        className="object-cover rounded-md"
-                                                    />
-                                                </div>
 
-                                                {/* BACK */}
                                                 <div
-                                                    className="absolute inset-0"
+                                                    className="relative w-full h-full transition-transform ease-in-out"
                                                     style={{
-                                                        backfaceVisibility: "hidden",
-                                                        transform: "rotateY(180deg)",
+                                                        transformStyle: "preserve-3d",
+                                                        transitionDuration: "900ms",
+                                                        transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
                                                     }}
                                                 >
-                                                    <Image
-                                                        src={event.cover}
-                                                        alt={event.title}
-                                                        fill
-                                                        sizes="(max-width: 768px) 100vw, 700px"
-                                                        className="object-cover rounded-md"
+                                                    {/* FRONT */}
+                                                    <div
+                                                        className="absolute inset-0 rounded-lg overflow-hidden"
+                                                        style={{
+                                                            backfaceVisibility: "hidden",
+                                                            backgroundImage: "url(/images_events/card.png)",
+                                                            backgroundRepeat: "no-repeat",
+                                                            backgroundPosition: "center",
+                                                            backgroundSize: "contain",
+                                                            backgroundOrigin: "content-box",
+                                                            backgroundClip: "content-box",
+                                                        }}
                                                     />
 
-                                                    {/* DARK OVERLAY */}
+                                                    {/* BACK */}
                                                     <div
-                                                        className="absolute inset-0
-                                     bg-gradient-to-t
-                                     from-black/70 via-black/0 to-transparent
-                                     opacity-0 transition-opacity duration-300
-                                     group-hover:opacity-100"
-                                                    />
-
-                                                    {/* TEXT */}
-                                                    <div
-                                                        className="absolute bottom-8 left-1/2 -translate-x-1/2
-                                     font-card text-[40px] leading-none
-                                     text-white text-center
-                                     opacity-0 transition-opacity duration-300
-                                     pointer-events-none
-                                     group-hover:opacity-100
-                                     whitespace-nowrap"
+                                                        className="absolute inset-0 rounded-lg overflow-hidden"
+                                                        style={{
+                                                            backfaceVisibility: "hidden",
+                                                            transform: "rotateY(180deg)",
+                                                            backgroundImage: `url(${event.cover})`,
+                                                            backgroundRepeat: "no-repeat",
+                                                            backgroundPosition: "center",
+                                                            backgroundSize: "cover",
+                                                            backgroundOrigin: "content-box",
+                                                            backgroundClip: "content-box",
+                                                        }}
                                                     >
-                                                        {event.title}
+                                                        {/* OVERLAY */}
+                                                        <div
+                                                            className="
+                                absolute inset-0
+                                bg-gradient-to-t
+                                from-black/70 via-black/0 to-transparent
+                                opacity-30 lg:opacity-0
+                                transition-opacity duration-300
+                                lg:group-hover:opacity-100
+                              "
+                                                        />
+
+                                                        {/* TITLE */}
+                                                        <div
+                                                            className="
+    absolute bottom-4 sm:bottom-6 lg:bottom-10
+    left-0 right-0
+    px-4 sm:px-6 lg:px-8
+    font-card
+    text-[18px] sm:text-[22px] md:text-[26px] lg:text-[32px]
+    text-white text-center
+    opacity-100 lg:opacity-0
+    transition-opacity duration-300
+    pointer-events-none
+    lg:group-hover:opacity-100
+    leading-tight
+  "
+                                                        >
+                                                            {event.title}
+                                                        </div>
+
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* EMPTY COLUMN — creates cross pattern */}
-                                    {index !== EVENTS.length - 1 && <div />}
+                                    {/* EMPTY COLUMN — desktop cross layout only */}
+                                    {index !== EVENTS.length - 1 && (
+                                        <div className="hidden lg:block" />
+                                    )}
                                 </React.Fragment>
                             );
                         })}
                     </div>
                 </section>
+
                 <Footer />
-            </main >
+            </main>
         </>
     );
 }

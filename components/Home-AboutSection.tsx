@@ -3,6 +3,7 @@
 import { useEffect, useRef, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Image from 'next/image';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -203,10 +204,12 @@ export default function AboutSection() {
                 </div>
             </div>
 
-            <img
+            <Image
                 ref={singleCardRef}
                 src="/images_home/Group_9.png"
                 alt="Single Card"
+                width={673}
+                height={567}
                 className="hidden md:block absolute pointer-events-none object-contain -translate-x-1/2 md:max-w-[60%] min-w-70 max-h-125 rounded-[10px] will-change-[top,left] w-[clamp(300px,30vw,380px)]"
             />
         </section>

@@ -32,7 +32,7 @@ const FluidCanvas: FC<FluidCanvasProps> = ({ className }) => {
                     intensity={8}
                     force={2}
                     distortion={1.8}
-                    radius={0.3}
+                    radius={0.2}
                 //   velocityDissipation={0.985}
                 //   densityDissipation={0.92}
                 />

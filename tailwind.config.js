@@ -16,6 +16,7 @@ module.exports = {
         roboto: ["var(--font-roboto)"],
         'jqka': ['var(--font-jqka)', 'sans-serif'],
       },
+      
     },
   },
   // ...other config...

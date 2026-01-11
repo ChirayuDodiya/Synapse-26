@@ -1,7 +1,18 @@
 "use client";
-import HomeSection from "@/app/synapse/page";
-export default function Home() {
 
+import gsap from 'gsap';
+import HomeSection from "@/app/synapse/page";
+import { useEffect } from "react";
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+export default function Home() {
+  useEffect(() => {
+    ScrollTrigger.normalizeScroll({
+      allowNestedScroll: true,
+    })
+  }, [])
   return (
     <>
       <main className="relative min-h-screen bg-black overflow-x-hidden">

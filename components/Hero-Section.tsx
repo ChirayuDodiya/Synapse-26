@@ -13,9 +13,6 @@ import Svg from "@/components/Svg";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const LETTERS = "abcdefghijklmnopqrstuvwxyz";
-const SYMBOLS = "!@#$%^&*()_+-=[]{}|;:,.<>?";
-const NUMBERS = "0123456789";
 const FIRST_PHASE_TIME = 4000;
 
 type HeroSectionProps = {
@@ -28,7 +25,7 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
     const INTRO_KEY = "synapse_has_entered";
 
     const [isLoading, setIsLoading] = useState(() => {
-        if (typeof window === "undefined") return true;
+        if (typeof window === "undefined") return true; 
         return sessionStorage.getItem(INTRO_KEY) !== "true";
     });
 
@@ -73,17 +70,6 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
         pending: new Set<string>(),
         resolved: new Set<string>()
     });
-    const PRELOAD_ASSETS = [
-        // Hero visuals
-        "/images_home/RedHand2.jpeg",
-        "/images_home/redcard4.png",
-        "/images_home/card_center.png",
-        "/Synapse_Music.mp3",
-        "/images_home/inkReveal2.gif",
-
-        // About section
-        "/images_home/Group_9.png",
-    ];
 
     const updateProgressText = useCallback((progress: number) => {
         if (progressTextRef.current) {
@@ -91,38 +77,6 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
         }
 
         setLoadingProgress(Math.round(progress * 100));
-    }, []);
-
-    const scrambleTween = useCallback((element: HTMLElement, finalText: string) => {
-        const chars = finalText.split("");
-
-        return gsap.to({}, {
-            duration: 0.6,
-            onUpdate: function () {
-                const p = (this as any).progress();
-                let out = "";
-
-                chars.forEach((ch, i) => {
-                    if (i < p * chars.length) {
-                        out += ch;
-                    } else if (/[A-Za-z]/.test(ch)) {
-                        out += LETTERS[Math.floor(Math.random() * LETTERS.length)];
-                    } else if (/[0-9]/.test(ch)) {
-                        out += NUMBERS[Math.floor(Math.random() * NUMBERS.length)];
-                    } else {
-                        out += SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-                    }
-                });
-
-                element.textContent = out;
-            },
-            onComplete: () => {
-                element.textContent = finalText;
-            },
-            onReverseComplete: () => {
-                element.textContent = "";
-            }
-        });
     }, []);
 
     const loadSVG = useCallback(async () => {
@@ -153,14 +107,11 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
             progressTextRef.current.style.opacity = "0";
         }
 
-        setTimeout(() => {
-            if (enterBtnRef.current) {
-                setShowEnter(true);
-            }
-        }, 600);
+        if (enterBtnRef.current) {
+            setShowEnter(true);
+        }
     }, []);
 
-    const FINISH_EASE = 0.25;
     const FINISH_THRESHOLD = 0.99;
     const observeBrowserLoading = (onProgress: (p: number) => void, onDone: () => void) => {
         let totalBytes = 0;
@@ -219,9 +170,7 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
             ? 1
             : combinedProgress;
 
-        const ease = assetsRef.current.finishing
-            ? FINISH_EASE
-            : 0.12;
+        const ease = assetsRef.current.finishing ? 0.35 : 0.08;
 
         assetsRef.current.strokeProgress +=
             (target - assetsRef.current.strokeProgress) * ease;
@@ -281,19 +230,36 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
     }, [loadSVG, drawStroke]);
 
     const lockScroll = useCallback(() => {
+        const scrollY = window.scrollY;
+
         prevOverflow.current.html = document.documentElement.style.overflow;
         prevOverflow.current.body = document.body.style.overflow;
 
         document.documentElement.style.overflow = "hidden";
         document.body.style.overflow = "hidden";
+
+        document.body.style.position = "fixed";
+        document.body.style.top = `-${scrollY}px`;
+        document.body.style.width = "100%";
     }, []);
 
+
     const unlockScroll = useCallback(() => {
+        const scrollY = Math.abs(
+            parseInt(document.body.style.top || "0", 10)
+        );
+
         document.documentElement.style.overflow = prevOverflow.current.html;
         document.body.style.overflow = prevOverflow.current.body;
 
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.width = "";
+
+        window.scrollTo(0, scrollY);
         ScrollTrigger.refresh(true);
     }, []);
+
 
     const enterSilently = useCallback(() => {
         if (enterTriggeredRef.current) return;
@@ -318,7 +284,6 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
         if (!screenContainerRef.current || !part3_2Ref.current || !flipCardRef.current ||
             !part3Ref.current || !titleRef.current) return;
 
-        // Pin the hero
         gsap.set(screenContainerRef.current, {
             transformStyle: "preserve-3d",
             backfaceVisibility: "hidden"
@@ -330,7 +295,6 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
             backfaceVisibility: "hidden"
         });
 
-        // Master timeline for all animations
         const masterTL = gsap.timeline({
             scrollTrigger: {
                 trigger: heroRef.current,
@@ -341,7 +305,6 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
                 pinSpacing: false,
                 anticipatePin: 1.2,
                 onUpdate: (self) => {
-                    // Enable pointer-events when we're in the part3 visible range (~35-55% of scroll)
                     if (self.progress > 0.35 && self.progress < 0.5) {
                         setPart3Active(true);
                     } else {
@@ -358,9 +321,6 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
         masterTL.to(scrollHintRef.current, {
             opacity: 0,
             ease: "none",
-            onStart: () => {
-                gsap.getById("scrollHintIdle")?.kill();
-            },
         }, 0.05)
 
             .to("#redCard", {
@@ -376,7 +336,7 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
                     duration: 0.6,
                     ease: "power2.out"
                 },
-                0.3 // shortly after flip starts
+                0.3
             )
             .to(flipCardRef.current, {
                 rotationY: 90,
@@ -390,7 +350,7 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
                     duration: 0.6,
                     ease: "power2.in"
                 },
-                3.3 // near end of flip
+                3.3
             )
             .to(flipCardRef.current, {
                 rotationY: 180,
@@ -427,11 +387,12 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
             )
             .from(
                 "#part3 .title-wrapper",
-                { opacity: 0 },
-                "part3Reveal"
-            )
-            .add(
-                scrambleTween(titleRef.current, "synapse'26"),
+                {
+                    opacity: 0,
+                    y: -100,
+                    ease: "power3.out",
+                    stagger: 0.25,
+                },
                 "part3Reveal+=0.2"
             ).add(() => {
                 setShowNavbar(true);
@@ -478,7 +439,7 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
                     duration: 0.6,
                     ease: "power2.out"
                 },
-                "together-=0.1" // shortly after flip starts
+                "together-=0.1" 
             )
             .to(".screen-container", { rotationZ: 185, duration: 1.5, scale: 0.25, ease: "none" }, "together")
             .to(".screen-container", { rotationY: 90, duration: 1.5, ease: "none" }, "together")
@@ -487,7 +448,7 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
             .to(".screen-container", { rotationZ: 420, duration: 2, scale: 0.15, ease: "none" }, "together2")
             .to(".screen-container", { duration: 2, ease: "none" });
 
-    }, [scrambleTween]);
+    }, []);
 
     const initScrollProgress = useCallback(() => {
         ScrollTrigger.create({
@@ -583,10 +544,10 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
 
                 initScrollAnimations();
 
-                unlockScroll();
                 ScrollTrigger.refresh(true);
 
                 initScrollProgress();
+                unlockScroll();
                 check = false;
             }
         });
@@ -609,66 +570,64 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
                         Enter
                     </button>
                 </>
-            ) : (
-                <>
-                    <Navbar visible={showNavbar}>
-                        <NavigationPanel />
-                    </Navbar>
+            ) : <></>
+            }
+            <>
+                <Navbar visible={showNavbar}>
+                    <NavigationPanel />
+                </Navbar>
 
-                    <div className="hero relative inset-0 h-screen z-25" ref={heroRef}>
-                        <div id="maskLayer" className="absolute inset-0 opacity-100 " ref={maskLayerRef} style={{
-                            WebkitMaskImage: 'url("/images_home/inkReveal2.gif")',
-                            WebkitMaskRepeat: 'no-repeat',
-                            WebkitMaskPosition: 'center',
-                            WebkitMaskSize: '0% 0%',
-                            maskImage: 'url("/images_home/inkReveal2.gif")',
-                            maskRepeat: 'no-repeat',
-                            maskPosition: 'center',
-                            maskSize: '0% 0%',
-                        }}>
-                            <img id="coloredImage" src="/images_home/RedHand2.jpeg" alt="Red Hand" ref={coloredImageRef} className="absolute inset-0 h-full w-full object-cover pointer-events-none" />
+                <div className="hero relative inset-0 h-screen z-25" ref={heroRef}>
+                    <div id="maskLayer" className="absolute inset-0 opacity-100 " ref={maskLayerRef} style={{
+                        WebkitMaskImage: 'url("/images_home/inkReveal2.gif")',
+                        WebkitMaskRepeat: 'no-repeat',
+                        WebkitMaskPosition: 'center',
+                        WebkitMaskSize: '0% 0%',
+                        maskImage: 'url("/images_home/inkReveal2.gif")',
+                        maskRepeat: 'no-repeat',
+                        maskPosition: 'center',
+                        maskSize: '0% 0%',
+                    }}>
+                        <img id="coloredImage" src="/images_home/RedHand2.jpeg" alt="Red Hand" ref={coloredImageRef} className="absolute inset-0 h-full w-full object-cover pointer-events-none" />
 
-                            <div id="flipCard" className="absolute inset-0 transform-3d" ref={flipCardRef}>
-                                <img id="redCard" className="absolute inset-0 w-full h-full object-cover pointer-events-none backface-hidden" src="/images_home/redcard4.png" alt="Red Card" ref={cardRef} />
+                        <div id="flipCard" className="absolute inset-0 transform-3d" ref={flipCardRef}>
+                            <img id="redCard" className="absolute inset-0 w-full h-full object-cover pointer-events-none backface-hidden" src="/images_home/redcard4.png" alt="Red Card" ref={cardRef} />
 
-                                <div id="part3_2" ref={part3_2Ref} style={{
-                                    backgroundImage:
-                                        "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 35%, rgba(0,0,0,0.45) 65%, rgba(0,0,0,0.75) 85%, #000 100%), url(/images_home/image_part3_2.jpg)",
-                                    backgroundSize: "cover",
-                                    backgroundPosition: "center",
-                                }} className=" absolute inset-0 flex flex-col items-center justify-center opacity-100 will-change-transform backface-hidden transform-[rotateY(180deg)]">
-                                    <div className="screen-container relative w-screen h-screen flex items-center justify-center perspective-[1000px] transform-3d" ref={screenContainerRef}>
-                                        <div ref={frontScreenRef} className="screen-front absolute inset-0 bg-black bg-[url('/images_home/part3-image.png')] bg-no-repeat bg-center bg-contain z-2 backface-hidden border-4 border-solid rounded " style={{ borderColor: "rgba(250,235,215,0)" }}></div>
-                                        <div className="center-joker-container absolute inset-0 flex items-center justify-center transform-[rotateY(180deg)] backface-hidden z-1">
-                                            <img src="/images_home/card_center.png" className="center-joker w-full h-auto rotate-[-64deg] object-contain" alt="Joker Card" />
-                                        </div>
+                            <div id="part3_2" ref={part3_2Ref} style={{
+                                backgroundImage:
+                                    "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 35%, rgba(0,0,0,0.45) 65%, rgba(0,0,0,0.75) 85%, #000 100%), url(/images_home/image_part3_2.png)",
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                            }} className=" absolute inset-0 flex flex-col items-center justify-center opacity-100 will-change-transform backface-hidden transform-[rotateY(180deg)]">
+                                <div className="screen-container relative w-screen h-screen flex items-center justify-center perspective-[1000px] transform-3d" ref={screenContainerRef}>
+                                    <div ref={frontScreenRef} className="screen-front absolute inset-0 bg-black bg-[url('/images_home/part3-image.png')] bg-no-repeat bg-center bg-contain z-2 backface-hidden border-4 border-solid rounded " style={{ borderColor: "rgba(250,235,215,0)" }}></div>
+                                    <div className="center-joker-container absolute inset-0 flex items-center justify-center transform-[rotateY(180deg)] backface-hidden z-1">
+                                        <img src="/images_home/card_center.png" className="center-joker w-full h-auto rotate-[-64deg] object-contain" alt="Joker Card" />
                                     </div>
-                                </div>
-
-                                <div id="part3" ref={part3Ref} className={`absolute inset-0 w-full h-screen transform-[rotateY(180deg)] backface-hidden ${part3Active ? "pointer-events-auto" : "pointer-events-none"}`}>
-                                    <div className="register-btn absolute bottom-[50px] right-[50px]">
-                                        <NavbarButton href="/register" variant="register">
-                                            Register
-                                        </NavbarButton>
-                                    </div>
-
-                                    <div className="title-wrapper flex justify-center pt-[60px] md:pt-[120px] h-[calc(100vh-120px)] md:h-[calc(100vh-200px)]">
-                                        <h1 className="title text-[clamp(48px,15vw,140px)] font-joker leading-none text-center px-4" ref={titleRef}>unleash?2_</h1>
-                                    </div>
-
-                                    <CountdownTimer targetDate={new Date("2026-02-26 00:00:00")} />
-
                                 </div>
                             </div>
-                            <div className='absolute font-jqka flex flex-col z-100 h-[120px] w-[60px] text-xs text-center items-center justify-center gap-[5px] left-1/2 -translate-x-1/2 border-amber-50 bottom-[10px] border-solid border rounded-full px-0.5' ref={scrollHintRef}>
-                                Scroll To Explore <br /><p className="text-3xl text-center">↓</p>
+
+                            <div id="part3" ref={part3Ref} className={`absolute inset-0 w-full h-screen transform-[rotateY(180deg)] backface-hidden ${part3Active ? "pointer-events-auto" : "pointer-events-none"}`}>
+                                <div className="register-btn absolute bottom-[50px] right-[50px]">
+                                    <NavbarButton href="/register" variant="register">
+                                        Register
+                                    </NavbarButton>
+                                </div>
+
+                                <div className="title-wrapper flex justify-center pt-[60px] md:pt-[120px] h-[calc(100vh-120px)] md:h-[calc(100vh-200px)]">
+                                    <h1 className="title text-[clamp(48px,15vw,140px)] font-joker leading-none text-center px-4" ref={titleRef}>synapse' 26</h1>
+                                </div>
+
+                                <CountdownTimer targetDate={new Date("2026-02-26 00:00:00")} />
+
                             </div>
                         </div>
+                        <div className='absolute font-jqka flex flex-col z-100 h-[120px] w-[60px] text-xs text-center items-center justify-center gap-[5px] left-1/2 -translate-x-1/2 border-amber-50 bottom-[30px] border-solid border rounded-full px-0.5' ref={scrollHintRef}>
+                            Scroll To Explore <br /><p className="text-3xl text-center">↓</p>
+                        </div>
                     </div>
-                </>
-            )
-            }
-
+                </div>
+            </>
             <audio
                 ref={audioRef}
                 id="bgMusic"

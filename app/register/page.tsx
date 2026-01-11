@@ -17,6 +17,8 @@ export default function RegisterPage() {
 
         <div className="absolute top-8 left-8 z-10">
           <div className="relative w-16 h-16">
+            <Link
+      href="/">
             <Image
               src="/Synapse Logo.png"
               alt="Synapse Logo"
@@ -24,6 +26,7 @@ export default function RegisterPage() {
               className="object-contain"
               priority
             />
+            </Link>
           </div>
         </div>
 
