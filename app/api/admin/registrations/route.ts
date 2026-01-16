@@ -16,65 +16,96 @@ export async function GET(req: NextRequest) {
         const paymentMethod = searchParams.get("paymentMethod");
         const paymentStatus = searchParams.get("paymentStatus");
 
-        const buildQuery = () => {
-            let q = supabase.from("event_registrations").select(
-                `
-                transaction_id,
-                registration_id,
-                payment_status,
-                team (
-                team_members ( user_id )
-                ), 
-                users(user_name,email,college),
-                event_fee(
-                    event(event_name,event_category(category_name)),
-                    fee(participation_type,price)
-                    ),
-                payment_method(method_name,gateway_charge)
-                `,
-                { count: "exact" }
-            );
-
-            if (search.trim()) {
-                q = q.or(
+        const buildQueryUsers = () => {
+            let q = supabase
+                .from("event_registrations")
+                .select(
                     `
-                    transaction_id.ilike.%${search}%,
-                    users.user_name.ilike.%${search}%,
-                    users.email.ilike.%${search}%,
-                    users.college.ilike.%${search}%
-                `
+      transaction_id,
+      registration_id,
+      payment_status,
+      gross_amount,
+      team (
+        team_members ( user_id )
+      ), 
+      users!inner(user_name,email,college),
+      event_fee(
+        event(event_name,event_category(category_name)),
+        fee(participation_type)
+      ),
+      payment_method(method_name,gateway_charge)
+      `,
+                    { count: "exact" }
+                );
+
+            if (search.trim() !== "") {
+                q = q.or(
+                    `user_name.ilike.%${search}%,email.ilike.%${search}%,college.ilike.%${search}%`,
+                    { foreignTable: "users" }
                 );
             }
 
-            if (eventFilter) {
-                q = q.eq("event_fee.event.event_name", eventFilter);
-            }
-
-            if (paymentMethod) {
-                q = q.eq("payment_method.method_name", paymentMethod);
-            }
-
-            if (paymentStatus) {
-                q = q.eq("payment_status", paymentStatus);
-            }
+            if (eventFilter) q = q.eq("event_fee.event.event_name", eventFilter);
+            if (paymentMethod) q = q.eq("payment_method.method_name", paymentMethod);
+            if (paymentStatus) q = q.eq("payment_status", paymentStatus);
 
             return q;
         };
 
-        const { data, error, count } = await buildQuery().range(from, to);
-        
-        if (error) {
-            return NextResponse.json({ error: error.message }, { status: 500 });
-        }
-        
-        let totalRegistrations = data?.length ?? 0;
+        const buildQueryTxn = () => {
+            let q = supabase
+                .from("event_registrations")
+                .select(
+                    `
+      transaction_id,
+      registration_id,
+      payment_status,
+      gross_amount,
+      team (
+        team_members ( user_id )
+      ), 
+      users(user_name,email,college),
+      event_fee(
+        event(event_name,event_category(category_name)),
+        fee(participation_type)
+      ),
+      payment_method(method_name,gateway_charge)
+      `,
+                    { count: "exact" }
+                );
+
+            if (search.trim() !== "") {
+                q = q.ilike("transaction_id", `%${search}%`);
+            }
+
+            if (eventFilter) q = q.eq("event_fee.event.event_name", eventFilter);
+            if (paymentMethod) q = q.eq("payment_method.method_name", paymentMethod);
+            if (paymentStatus) q = q.eq("payment_status", paymentStatus);
+
+            return q;
+        };
+
+        const { data: d1 } = await buildQueryUsers().range(from, to);
+        const { data: d2 } = await buildQueryTxn().range(from, to);
+
+        const merged = [...(d1 ?? []), ...(d2 ?? [])];
+
+        const uniqueMap = new Map();
+        merged.forEach((row: any) => {
+            uniqueMap.set(row.registration_id, row);
+        });
+
+        const uniqueData = Array.from(uniqueMap.values());
+
+
+        let totalRegistrations = uniqueData?.length ?? 0;
         let paid = 0;
         let grossRevenue = 0;
         let gatewayCharges = 0;
         let netRevenue = 0;
 
-        data?.forEach((row: any) => {
-            const price = row.event_fee?.fee?.price ?? 0;
+        uniqueData?.forEach((row: any) => {
+            const price = row.gross_amount ?? 0;
             const gateway = row.payment_method?.gateway_charge ?? 0;
 
             if (row.payment_status === "done") {
@@ -86,8 +117,8 @@ export async function GET(req: NextRequest) {
         });
 
         const rows =
-            data?.map((row: any) => {
-                const price = row.event_fee?.fee?.price ?? 0;
+            uniqueData?.map((row: any) => {
+                const price = row.gross_amount ?? 0;
                 const gateway = row.payment_method?.gateway_charge ?? 0;
                 const groupSize = row.team?.team_members?.length ?? 1;
 
@@ -112,7 +143,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({
             page,
             limit,
-            total: count ?? 0,
+            total: totalRegistrations,
             summary: {
                 total_registrations: totalRegistrations,
                 paid,
