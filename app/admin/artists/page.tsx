@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import ArtistTable from '@/components/admin/tables/ArtistTable';
+import { useState } from "react";
+import Link from "next/link";
+import ArtistTable from "@/components/admin/tables/ArtistTable";
 
 interface Artist {
   id: number;
@@ -16,19 +16,19 @@ interface Artist {
 const initialArtists: Artist[] = [
   {
     id: 1,
-    name: 'DJ Shadow',
-    concertNight: 'Night 1 - EDM Night',
-    genre: 'EDM',
-    revealDate: '2025-12-18',
-    bio: 'International EDM artist',
+    name: "DJ Shadow",
+    concertNight: "Night 1 - EDM Night",
+    genre: "EDM",
+    revealDate: "2025-12-18",
+    bio: "International EDM artist",
   },
   {
     id: 2,
-    name: 'The Rock Band',
-    concertNight: 'Night 2 - Rock Night',
-    genre: 'Rock',
-    revealDate: '2025-12-20',
-    bio: 'Famous rock band from India',
+    name: "The Rock Band",
+    concertNight: "Night 2 - Rock Night",
+    genre: "Rock",
+    revealDate: "2025-12-20",
+    bio: "Famous rock band from India",
   },
 ];
 
@@ -58,7 +58,11 @@ export default function ArtistsPage() {
 
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-xl font-semibold mb-6">All Artists</h2>
-        <ArtistTable artists={artists} onDelete={handleDelete} isLoading={isLoading} />
+        <ArtistTable
+          artists={artists}
+          onDelete={handleDelete}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   );

@@ -1,30 +1,34 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 
 interface ForgotPasswordBoxProps {
-  goLogin: () => void
-  goRegister: () => void
-  goOtp: (email: string) => void
+  goLogin: () => void;
+  goRegister: () => void;
+  goOtp: (email: string) => void;
 }
 
-export default function ForgotPasswordBox({ goLogin, goRegister, goOtp }: ForgotPasswordBoxProps) {
-  const [email, setEmail] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
+export default function ForgotPasswordBox({
+  goLogin,
+  goRegister,
+  goOtp,
+}: ForgotPasswordBoxProps) {
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
-    setSuccess(null)
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
 
     if (!email.trim()) {
-      setError("Email is required")
-      return
+      setError("Email is required");
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
       const response = await fetch("/api/auth/reset-password", {
@@ -33,21 +37,21 @@ export default function ForgotPasswordBox({ goLogin, goRegister, goOtp }: Forgot
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to send reset email")
+        throw new Error(data.error || "Failed to send reset email");
       }
 
-      setSuccess("Password reset email sent! Please check your inbox.")
+      setSuccess("Password reset email sent! Please check your inbox.");
     } catch (err: any) {
-      setError(err.message || "An error occurred")
+      setError(err.message || "An error occurred");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="w-full max-w-md space-y-8">
@@ -82,8 +86,8 @@ export default function ForgotPasswordBox({ goLogin, goRegister, goOtp }: Forgot
           placeholder="E.g. rsharma@gmail.com"
           value={email}
           onChange={(e) => {
-            setEmail(e.target.value)
-            setError(null)
+            setEmail(e.target.value);
+            setError(null);
           }}
           className="w-full px-4 py-3 bg-transparent border border-white rounded-md text-white font-poppins placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 disabled:opacity-50"
           disabled={isLoading}
@@ -97,9 +101,25 @@ export default function ForgotPasswordBox({ goLogin, goRegister, goOtp }: Forgot
           disabled={isLoading}
         >
           {isLoading ? (
-            <svg className="animate-spin h-6 w-6 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <svg
+              className="animate-spin h-6 w-6 text-black"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
           ) : (
             "Send Reset Link"
@@ -132,5 +152,5 @@ export default function ForgotPasswordBox({ goLogin, goRegister, goOtp }: Forgot
         </p>
       </form>
     </div>
-  )
+  );
 }

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
 interface AccommodationData {
   type: string;
@@ -28,18 +28,20 @@ interface AccommodationFormProps {
 export default function AccommodationForm({
   initialData,
   onSubmit,
-  submitButtonText = 'Add Accommodation Package',
+  submitButtonText = "Add Accommodation Package",
   isLoading = false,
 }: AccommodationFormProps) {
   const [formData, setFormData] = useState<AccommodationData>({
-    type: initialData?.type || '',
-    price: initialData?.price || '',
-    startDate: initialData?.startDate || '',
-    endDate: initialData?.endDate || '',
-    description: initialData?.description || '',
+    type: initialData?.type || "",
+    price: initialData?.price || "",
+    startDate: initialData?.startDate || "",
+    endDate: initialData?.endDate || "",
+    description: initialData?.description || "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -62,7 +64,10 @@ export default function AccommodationForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <form
+      onSubmit={handleSubmit}
+      className="grid grid-cols-1 md:grid-cols-2 gap-4"
+    >
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Package Name
@@ -77,7 +82,7 @@ export default function AccommodationForm({
           required
         />
       </div>
-      
+
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Total Price (₹)
@@ -92,7 +97,7 @@ export default function AccommodationForm({
           required
         />
       </div>
-      
+
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Start Date
@@ -106,7 +111,7 @@ export default function AccommodationForm({
           required
         />
       </div>
-      
+
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           End Date
@@ -125,11 +130,12 @@ export default function AccommodationForm({
       {formData.startDate && formData.endDate && (
         <div className="md:col-span-2">
           <p className="text-sm font-medium text-indigo-600">
-            Duration: {calculateDuration(formData.startDate, formData.endDate)} days
+            Duration: {calculateDuration(formData.startDate, formData.endDate)}{" "}
+            days
           </p>
         </div>
       )}
-      
+
       <div className="md:col-span-2">
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Description
@@ -143,14 +149,14 @@ export default function AccommodationForm({
           placeholder="Package details, amenities, meals included, etc."
         />
       </div>
-      
+
       <div className="md:col-span-2">
         <button
           type="submit"
           disabled={isLoading}
           className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isLoading ? 'Saving...' : submitButtonText}
+          {isLoading ? "Saving..." : submitButtonText}
         </button>
       </div>
     </form>

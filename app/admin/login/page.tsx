@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email === 'admin@synapse.com' && password === 'admin123') {
-      localStorage.setItem('isAdminLoggedIn', 'true');
-      router.replace('/admin');
+    if (email === "admin@synapse.com" && password === "admin123") {
+      localStorage.setItem("isAdminLoggedIn", "true");
+      router.replace("/admin");
     } else {
-      alert('Invalid credentials! Use admin@synapse.com / admin123');
+      alert("Invalid credentials! Use admin@synapse.com / admin123");
     }
   };
 
@@ -27,7 +27,9 @@ export default function AdminLoginPage() {
         </div>
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Email Address
+            </label>
             <input
               type="email"
               value={email}
@@ -38,7 +40,9 @@ export default function AdminLoginPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Password
+            </label>
             <input
               type="password"
               value={password}

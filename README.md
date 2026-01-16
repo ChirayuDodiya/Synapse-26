@@ -1,5 +1,7 @@
 # Synapse' 26
+
 This is the official codebase for the Synapse 2026 Website
+
 # DA Ka Tyohaar
 
 ## Getting Started

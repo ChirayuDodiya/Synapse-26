@@ -1,24 +1,24 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger);
 
 /* =======================
    TYPES
 ======================= */
 
 interface Event {
-  name: string
-  time: string
-  venue: string
+  name: string;
+  time: string;
+  venue: string;
 }
 
 interface DaySchedule {
-  day: number
-  events: Event[]
+  day: number;
+  events: Event[];
 }
 
 /* =======================
@@ -30,41 +30,61 @@ const schedule: DaySchedule[] = [
     day: 1,
     events: [
       { name: "Battledrome", time: "9:00 AM - 10:30 AM", venue: "Main Hall A" },
-      { name: "Workshop: Introduction to GSAP", time: "11:00 AM - 12:30 PM", venue: "Room 203" },
+      {
+        name: "Workshop: Introduction to GSAP",
+        time: "11:00 AM - 12:30 PM",
+        venue: "Room 203",
+      },
       { name: "Lunch Break", time: "12:30 PM - 2:00 PM", venue: "Cafeteria" },
     ],
   },
   {
     day: 2,
     events: [
-      { name: "Battledrome", time: "7:00 AM - 8:00 AM", venue: "Rooftop Garden" },
-      { name: "Technical Deep Dive", time: "9:00 AM - 11:00 AM", venue: "Lab 101" },
-      { name: "Innovation Showcase", time: "11:30 AM - 1:00 PM", venue: "Exhibition Hall" },
+      {
+        name: "Battledrome",
+        time: "7:00 AM - 8:00 AM",
+        venue: "Rooftop Garden",
+      },
+      {
+        name: "Technical Deep Dive",
+        time: "9:00 AM - 11:00 AM",
+        venue: "Lab 101",
+      },
+      {
+        name: "Innovation Showcase",
+        time: "11:30 AM - 1:00 PM",
+        venue: "Exhibition Hall",
+      },
     ],
   },
   {
     day: 3,
     events: [
       { name: "Battledrome", time: "8:00 AM - 9:00 AM", venue: "Café Lounge" },
-      { name: "Advanced Workshop", time: "9:30 AM - 11:30 AM", venue: "Studio 5" },
+      {
+        name: "Advanced Workshop",
+        time: "9:30 AM - 11:30 AM",
+        venue: "Studio 5",
+      },
       { name: "Q&A Session", time: "12:00 PM - 1:00 PM", venue: "Auditorium" },
     ],
   },
-]
+];
 
 /* =======================
    COMPONENT
 ======================= */
 
 export default function TimelineContent() {
-  const sectionsRef = useRef<(HTMLDivElement | null)[]>([])
+  const sectionsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    ScrollTrigger.getAll().forEach((t) => t.kill())
+    ScrollTrigger.getAll().forEach((t) => t.kill());
 
     requestAnimationFrame(() => {
       sectionsRef.current.forEach((section) => {
-        if (!section) return
+        if (!section) return;
 
         gsap.fromTo(
           section,
@@ -79,14 +99,14 @@ export default function TimelineContent() {
               scrub: 1,
             },
           }
-        )
-      })
+        );
+      });
 
-      ScrollTrigger.refresh()
-    })
+      ScrollTrigger.refresh();
+    });
 
-    return () => ScrollTrigger.getAll().forEach((t) => t.kill())
-  }, [])
+    return () => ScrollTrigger.getAll().forEach((t) => t.kill());
+  }, []);
 
   return (
     <div
@@ -111,7 +131,7 @@ export default function TimelineContent() {
             <div
               key={daySchedule.day}
               ref={(el) => {
-                sectionsRef.current[index] = el
+                sectionsRef.current[index] = el;
               }}
               className="max-w-7xl mx-auto px-3 sm:px-4 space-y-6 md:space-y-12"
             >
@@ -183,5 +203,5 @@ export default function TimelineContent() {
         </div>
       </div>
     </div>
-  )
+  );
 }

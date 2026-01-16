@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 type User = {
   id: number;
@@ -15,65 +15,76 @@ type User = {
 const initialUsers: User[] = [
   {
     id: 1,
-    name: 'John Doe',
-    email: 'john@example.com',
-    phone: '9876543210',
-    college: 'ABC College',
-    regDate: '2025-12-01',
-    events: ['Hackathon 2025', 'Dance Battle'],
+    name: "John Doe",
+    email: "john@example.com",
+    phone: "9876543210",
+    college: "ABC College",
+    regDate: "2025-12-01",
+    events: ["Hackathon 2025", "Dance Battle"],
   },
   {
     id: 2,
-    name: 'Jane Smith',
-    email: 'jane@example.com',
-    phone: '9876543211',
-    college: 'XYZ University',
-    regDate: '2025-12-02',
-    events: ['Coding Competition'],
+    name: "Jane Smith",
+    email: "jane@example.com",
+    phone: "9876543211",
+    college: "XYZ University",
+    regDate: "2025-12-02",
+    events: ["Coding Competition"],
   },
   {
     id: 3,
-    name: 'Mike Johnson',
-    email: 'mike@example.com',
-    phone: '9876543212',
-    college: 'DEF Institute',
-    regDate: '2025-12-03',
-    events: ['Hackathon 2025', 'Robotics Workshop', 'Gaming Tournament'],
+    name: "Mike Johnson",
+    email: "mike@example.com",
+    phone: "9876543212",
+    college: "DEF Institute",
+    regDate: "2025-12-03",
+    events: ["Hackathon 2025", "Robotics Workshop", "Gaming Tournament"],
   },
   {
     id: 4,
-    name: 'Sarah Williams',
-    email: 'sarah@example.com',
-    phone: '9876543213',
-    college: 'GHI College',
-    regDate: '2025-12-04',
-    events: ['Dance Battle'],
+    name: "Sarah Williams",
+    email: "sarah@example.com",
+    phone: "9876543213",
+    college: "GHI College",
+    regDate: "2025-12-04",
+    events: ["Dance Battle"],
   },
 ];
 
 const Users: React.FC = () => {
   const [users] = useState<User[]>(initialUsers);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [eventFilter, setEventFilter] = useState<string>('All Events');
+  const [eventFilter, setEventFilter] = useState<string>("All Events");
 
-  const allEvents = ['All Events', ...Array.from(new Set(users.flatMap((u) => u.events)))] as string[];
+  const allEvents = [
+    "All Events",
+    ...Array.from(new Set(users.flatMap((u) => u.events))),
+  ] as string[];
 
   const filteredUsers = users.filter((user: User) => {
     const term = searchTerm.trim().toLowerCase();
     const matchesSearch =
-      term === '' ||
+      term === "" ||
       user.name.toLowerCase().includes(term) ||
       user.email.toLowerCase().includes(term) ||
       user.college.toLowerCase().includes(term);
 
-    const matchesEvent = eventFilter === 'All Events' || user.events.includes(eventFilter);
+    const matchesEvent =
+      eventFilter === "All Events" || user.events.includes(eventFilter);
 
     return matchesSearch && matchesEvent;
   });
 
   const downloadCSV = () => {
-    const headers = ['Name', 'Email', 'Phone', 'College', 'Registration Date', 'Events Registered'];
+    const headers = [
+      "Name",
+      "Email",
+      "Phone",
+      "College",
+      "Registration Date",
+      "Events Registered",
+    ];
 
     const rows = filteredUsers.map((user: User) => [
       user.name,
@@ -81,21 +92,26 @@ const Users: React.FC = () => {
       user.phone,
       user.college,
       user.regDate,
-      `"${user.events.join(', ')}"`,
+      `"${user.events.join(", ")}"`,
     ]);
 
-    const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const csvContent = [
+      headers.join(","),
+      ...rows.map((r) => r.join(",")),
+    ].join("\n");
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
 
-    link.setAttribute('href', url);
+    link.setAttribute("href", url);
     link.setAttribute(
-      'download',
-      `users_${eventFilter.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.csv`,
+      "download",
+      `users_${eventFilter.replace(/\s+/g, "_")}_${
+        new Date().toISOString().split("T")[0]
+      }.csv`
     );
-    link.style.visibility = 'hidden';
+    link.style.visibility = "hidden";
 
     document.body.appendChild(link);
     link.click();
@@ -104,12 +120,16 @@ const Users: React.FC = () => {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Users Management</h1>
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">
+        Users Management
+      </h1>
 
       <div className="bg-white rounded-lg shadow p-6 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Search Users</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Search Users
+            </label>
             <input
               type="text"
               placeholder="Search by name, email, or college..."
@@ -120,7 +140,9 @@ const Users: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Event</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Filter by Event
+            </label>
             <select
               value={eventFilter}
               onChange={(e) => setEventFilter(e.target.value)}
@@ -135,17 +157,23 @@ const Users: React.FC = () => {
           </div>
         </div>
 
-        {(searchTerm || eventFilter !== 'All Events') && (
+        {(searchTerm || eventFilter !== "All Events") && (
           <div className="mt-4 flex items-center gap-2 text-sm">
             <span className="text-gray-600">Active filters:</span>
-            {searchTerm && <span className="px-2 py-1 bg-indigo-100 text-indigo-700 rounded">Search: "{searchTerm}"</span>}
-            {eventFilter !== 'All Events' && (
-              <span className="px-2 py-1 bg-green-100 text-green-700 rounded">Event: {eventFilter}</span>
+            {searchTerm && (
+              <span className="px-2 py-1 bg-indigo-100 text-indigo-700 rounded">
+                Search: "{searchTerm}"
+              </span>
+            )}
+            {eventFilter !== "All Events" && (
+              <span className="px-2 py-1 bg-green-100 text-green-700 rounded">
+                Event: {eventFilter}
+              </span>
             )}
             <button
               onClick={() => {
-                setSearchTerm('');
-                setEventFilter('All Events');
+                setSearchTerm("");
+                setEventFilter("All Events");
               }}
               className="text-red-600 hover:text-red-800 ml-2"
             >
@@ -159,8 +187,10 @@ const Users: React.FC = () => {
         <div className="p-6 border-b flex justify-between items-center">
           <h2 className="text-xl font-semibold">
             All Users ({filteredUsers.length})
-            {eventFilter !== 'All Events' && (
-              <span className="text-sm text-gray-500 ml-2">- Registered in "{eventFilter}"</span>
+            {eventFilter !== "All Events" && (
+              <span className="text-sm text-gray-500 ml-2">
+                - Registered in "{eventFilter}"
+              </span>
             )}
           </h2>
           <button
@@ -176,33 +206,65 @@ const Users: React.FC = () => {
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phone</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">College</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Registration Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Events</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Email
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Phone
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  College
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Registration Date
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Events
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {filteredUsers.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
+                  <td
+                    colSpan={7}
+                    className="px-6 py-8 text-center text-gray-500"
+                  >
                     No users found matching the selected filters.
                   </td>
                 </tr>
               ) : (
                 filteredUsers.map((user) => (
                   <tr key={user.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">{user.name}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{user.email}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{user.phone}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{user.college}</td>
-                    <td className="px-6 py-4 text-sm text-gray-500">{user.regDate}</td>
-                    <td className="px-6 py-4 text-sm text-indigo-600">{user.events.length}</td>
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                      {user.name}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-900">
+                      {user.email}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-500">
+                      {user.phone}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-500">
+                      {user.college}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-500">
+                      {user.regDate}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-indigo-600">
+                      {user.events.length}
+                    </td>
                     <td className="px-6 py-4 text-sm">
-                      <button onClick={() => setSelectedUser(user)} className="text-indigo-600 hover:text-indigo-800">
+                      <button
+                        onClick={() => setSelectedUser(user)}
+                        className="text-indigo-600 hover:text-indigo-800"
+                      >
                         View Details
                       </button>
                     </td>
@@ -219,7 +281,10 @@ const Users: React.FC = () => {
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
             <div className="flex justify-between items-start mb-4">
               <h3 className="text-xl font-semibold">{selectedUser.name}</h3>
-              <button onClick={() => setSelectedUser(null)} className="text-gray-500 hover:text-gray-700 text-xl">
+              <button
+                onClick={() => setSelectedUser(null)}
+                className="text-gray-500 hover:text-gray-700 text-xl"
+              >
                 ✕
               </button>
             </div>
@@ -245,7 +310,10 @@ const Users: React.FC = () => {
                 ))}
               </ul>
             </div>
-            <button onClick={() => setSelectedUser(null)} className="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+            <button
+              onClick={() => setSelectedUser(null)}
+              className="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+            >
               Close
             </button>
           </div>
@@ -256,4 +324,3 @@ const Users: React.FC = () => {
 };
 
 export default Users;
-

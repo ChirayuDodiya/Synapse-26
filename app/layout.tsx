@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
-import { Geist, Geist_Mono, Bebas_Neue, Inter, Roboto, Poppins } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Bebas_Neue,
+  Inter,
+  Roboto,
+  Poppins,
+} from "next/font/google";
 import { SmoothScroller } from "@/components/ui/SmoothScroller";
-import Script from 'next/script'
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -42,8 +49,18 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "SYNAPSE'26 | DA Ka Tyohaar",
-  description: "SYNAPSE'26 - The Ultimate Tech-Cultural Festival. Register now for the most anticipated event of the year.",
-  keywords: ["synapse", "cultural-tech fest", "college fest", "2026", "technology", "events","gujarat","DAkaTyohaar"],
+  description:
+    "SYNAPSE'26 - The Ultimate Tech-Cultural Festival. Register now for the most anticipated event of the year.",
+  keywords: [
+    "synapse",
+    "cultural-tech fest",
+    "college fest",
+    "2026",
+    "technology",
+    "events",
+    "gujarat",
+    "DAkaTyohaar",
+  ],
   openGraph: {
     title: "SYNAPSE'26",
     description: "The Ultimate Techno-Cultural Festival",
@@ -58,13 +75,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
+      <Script
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        strategy="afterInteractive"
+      />
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${inter.variable} ${roboto.variable} ${poppins.variable} antialiased bg-black`}
       >
-        <SmoothScroller >
-          {children}
-        </SmoothScroller>
+        <SmoothScroller>{children}</SmoothScroller>
         <Analytics />
       </body>
     </html>

@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import AccommodationForm from '@/components/admin/forms/AccommodationForm';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import AccommodationForm from "@/components/admin/forms/AccommodationForm";
 
 interface AccommodationData {
   type: string;
@@ -31,10 +31,10 @@ export default function CreateAccommodationPage() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // On success, redirect to list
-      router.push('/admin/accommodation');
+      router.push("/admin/accommodation");
     } catch (error) {
-      console.error('Error creating accommodation:', error);
-      alert('Failed to create accommodation');
+      console.error("Error creating accommodation:", error);
+      alert("Failed to create accommodation");
     } finally {
       setIsLoading(false);
     }
@@ -43,10 +43,15 @@ export default function CreateAccommodationPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Link href="/admin/accommodation" className="text-indigo-600 hover:text-indigo-700">
+        <Link
+          href="/admin/accommodation"
+          className="text-indigo-600 hover:text-indigo-700"
+        >
           ← Back to Accommodations
         </Link>
-        <h1 className="text-3xl font-bold text-gray-800">Create Accommodation Package</h1>
+        <h1 className="text-3xl font-bold text-gray-800">
+          Create Accommodation Package
+        </h1>
       </div>
 
       <div className="bg-white rounded-lg shadow p-6">

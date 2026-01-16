@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useRef, useState } from "react";
 
 type Concert = {
   id: number;
@@ -46,11 +46,11 @@ export default function ConcertsPage() {
     timing: "",
   });
 
-  const nextId = useMemo(() => Date.now(), []);
+  const nextIdRef = useRef<number>(Date.now());
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setConcerts((prev) => [...prev, { id: nextId + prev.length, ...formData }]);
+    setConcerts((prev) => [...prev, { id: nextIdRef.current + prev.length, ...formData }]);
     setFormData({ name: "", date: "", venue: "", timing: "" });
   };
 
@@ -74,7 +74,9 @@ export default function ConcertsPage() {
   const handleEditSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!editingId) return;
-    setConcerts((prev) => prev.map((c) => (c.id === editingId ? { ...c, ...editData } : c)));
+    setConcerts((prev) =>
+      prev.map((c) => (c.id === editingId ? { ...c, ...editData } : c))
+    );
     setIsEditOpen(false);
     setEditingId(null);
   };
@@ -88,7 +90,9 @@ export default function ConcertsPage() {
     <div className="space-y-6">
       <header className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-wide text-teal-700">Concerts</p>
+          <p className="text-sm font-semibold uppercase tracking-wide text-teal-700">
+            Concerts
+          </p>
           <h1 className="text-3xl font-bold text-slate-900">Concert Nights</h1>
         </div>
         <span className="rounded-full bg-teal-100 px-3 py-1 text-sm font-semibold text-teal-800">
@@ -102,48 +106,71 @@ export default function ConcertsPage() {
             +
           </span>
           <div>
-            <h2 className="text-xl font-semibold text-slate-900">Add New Concert Night</h2>
-            <p className="text-sm text-slate-600">Keep your concert lineup up to date.</p>
+            <h2 className="text-xl font-semibold text-slate-900">
+              Add New Concert Night
+            </h2>
+            <p className="text-sm text-slate-600">
+              Keep your concert lineup up to date.
+            </p>
           </div>
         </div>
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 gap-4 md:grid-cols-2"
+        >
           <div>
-            <label className="mb-2 block text-sm font-semibold text-slate-700">Concert Name</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-700">
+              Concert Name
+            </label>
             <input
               type="text"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
               className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm shadow-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-200"
               placeholder="e.g., Night 1 - EDM Night"
               required
             />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-slate-700">Date</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-700">
+              Date
+            </label>
             <input
               type="date"
               value={formData.date}
-              onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, date: e.target.value })
+              }
               className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm shadow-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-200"
               required
             />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-slate-700">Venue</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-700">
+              Venue
+            </label>
             <input
               type="text"
               value={formData.venue}
-              onChange={(e) => setFormData({ ...formData, venue: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, venue: e.target.value })
+              }
               className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm shadow-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-200"
               required
             />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-slate-700">Timing</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-700">
+              Timing
+            </label>
             <input
               type="text"
               value={formData.timing}
-              onChange={(e) => setFormData({ ...formData, timing: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, timing: e.target.value })
+              }
               className="w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm shadow-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-200"
               placeholder="e.g., 7:00 PM - 11:00 PM"
               required
@@ -163,17 +190,30 @@ export default function ConcertsPage() {
       <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white/95 shadow-lg">
         <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4 bg-gradient-to-r from-slate-900 to-slate-800 text-white">
           <h2 className="text-lg font-semibold">All Concert Nights</h2>
-          <span className="text-sm text-white/80">Manage and edit your lineup</span>
+          <span className="text-sm text-white/80">
+            Manage and edit your lineup
+          </span>
         </div>
         <div className="divide-y divide-slate-100">
           {concerts.map((concert) => (
-            <div key={concert.id} className="flex flex-col gap-3 px-6 py-4 transition hover:bg-slate-50 md:flex-row md:items-center md:justify-between">
+            <div
+              key={concert.id}
+              className="flex flex-col gap-3 px-6 py-4 transition hover:bg-slate-50 md:flex-row md:items-center md:justify-between"
+            >
               <div>
-                <h3 className="text-lg font-semibold text-slate-900">{concert.name}</h3>
+                <h3 className="text-lg font-semibold text-slate-900">
+                  {concert.name}
+                </h3>
                 <div className="mt-1 flex flex-wrap gap-3 text-sm text-slate-700">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-teal-50 px-3 py-1 font-medium text-teal-700">📅 {concert.date}</span>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-cyan-50 px-3 py-1 font-medium text-cyan-700">📍 {concert.venue}</span>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-3 py-1 font-medium text-indigo-700">🕐 {concert.timing}</span>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-teal-50 px-3 py-1 font-medium text-teal-700">
+                    📅 {concert.date}
+                  </span>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-cyan-50 px-3 py-1 font-medium text-cyan-700">
+                    📍 {concert.venue}
+                  </span>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-indigo-50 px-3 py-1 font-medium text-indigo-700">
+                    🕐 {concert.timing}
+                  </span>
                 </div>
               </div>
               <div className="flex gap-2">
@@ -209,41 +249,57 @@ export default function ConcertsPage() {
             </div>
             <form onSubmit={handleEditSave} className="space-y-4 px-6 py-5">
               <div>
-                <label className="mb-2 block text-sm font-semibold text-slate-700">Concert Name</label>
+                <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  Concert Name
+                </label>
                 <input
                   type="text"
                   value={editData.name}
-                  onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                  onChange={(e) =>
+                    setEditData({ ...editData, name: e.target.value })
+                  }
                   className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
                   required
                 />
               </div>
               <div>
-                <label className="mb-2 block text-sm font-semibold text-slate-700">Date</label>
+                <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  Date
+                </label>
                 <input
                   type="date"
                   value={editData.date}
-                  onChange={(e) => setEditData({ ...editData, date: e.target.value })}
+                  onChange={(e) =>
+                    setEditData({ ...editData, date: e.target.value })
+                  }
                   className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
                   required
                 />
               </div>
               <div>
-                <label className="mb-2 block text-sm font-semibold text-slate-700">Venue</label>
+                <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  Venue
+                </label>
                 <input
                   type="text"
                   value={editData.venue}
-                  onChange={(e) => setEditData({ ...editData, venue: e.target.value })}
+                  onChange={(e) =>
+                    setEditData({ ...editData, venue: e.target.value })
+                  }
                   className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
                   required
                 />
               </div>
               <div>
-                <label className="mb-2 block text-sm font-semibold text-slate-700">Timing</label>
+                <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  Timing
+                </label>
                 <input
                   type="text"
                   value={editData.timing}
-                  onChange={(e) => setEditData({ ...editData, timing: e.target.value })}
+                  onChange={(e) =>
+                    setEditData({ ...editData, timing: e.target.value })
+                  }
                   className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
                   placeholder="e.g., 7:00 PM - 11:00 PM"
                   required

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import AccommodationTable from '@/components/admin/tables/AccommodationTable';
+import { useState } from "react";
+import Link from "next/link";
+import AccommodationTable from "@/components/admin/tables/AccommodationTable";
 
 interface Accommodation {
   id: number;
@@ -18,30 +18,30 @@ export default function AccommodationPage() {
   const [accommodations, setAccommodations] = useState<Accommodation[]>([
     {
       id: 1,
-      type: 'Deluxe Package',
+      type: "Deluxe Package",
       price: 5000,
-      startDate: '2025-12-20',
-      endDate: '2025-12-24',
+      startDate: "2025-12-20",
+      endDate: "2025-12-24",
       available: true,
-      description: '4 days accommodation with meals',
+      description: "4 days accommodation with meals",
     },
     {
       id: 2,
-      type: 'Standard Package',
+      type: "Standard Package",
       price: 3000,
-      startDate: '2025-12-21',
-      endDate: '2025-12-23',
+      startDate: "2025-12-21",
+      endDate: "2025-12-23",
       available: true,
-      description: '3 days accommodation',
+      description: "3 days accommodation",
     },
     {
       id: 3,
-      type: 'Budget Package',
+      type: "Budget Package",
       price: 1500,
-      startDate: '2025-12-22',
-      endDate: '2025-12-24',
+      startDate: "2025-12-22",
+      endDate: "2025-12-24",
       available: false,
-      description: '2 days basic accommodation',
+      description: "2 days basic accommodation",
     },
   ]);
 
@@ -67,7 +67,9 @@ export default function AccommodationPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-800">Accommodation Management</h1>
+        <h1 className="text-3xl font-bold text-gray-800">
+          Accommodation Management
+        </h1>
         <Link
           href="/admin/accommodation/new"
           className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
@@ -77,7 +79,9 @@ export default function AccommodationPage() {
       </div>
 
       <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-6">All Accommodation Packages</h2>
+        <h2 className="text-xl font-semibold mb-6">
+          All Accommodation Packages
+        </h2>
         <AccommodationTable
           accommodations={accommodations}
           onToggleAvailability={handleToggleAvailability}

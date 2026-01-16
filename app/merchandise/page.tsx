@@ -35,13 +35,11 @@ export default function MerchPage() {
 
   return (
     <div className="w-full bg-black text-white min-h-screen">
-
       {/* HERO */}
       <div className="relative w-full h-[clamp(320px,55vh,520px)] overflow-hidden">
-        
-          <Navbar visible={true}><NavigationPanel />
-</Navbar>
-        
+        <Navbar visible={true}>
+          <NavigationPanel />
+        </Navbar>
 
         <img
           src="/images_merch/merch-her.png"
@@ -63,7 +61,6 @@ export default function MerchPage() {
         />
       </div>
 
-
       {/* MERCH TITLE */}
       <div className="w-full flex justify-center mt-10 md:mt-14 mb-16">
         <img
@@ -72,7 +69,6 @@ export default function MerchPage() {
           alt="MERCHANDISE"
         />
       </div>
-
 
       {/* PRODUCT GRID */}
       <div
@@ -89,10 +85,11 @@ export default function MerchPage() {
     mb-28
   "
       >
-
-
         {products.map((product, i) => (
-          <div key={i} className="flex flex-col items-center w-full max-w-[280px]">
+          <div
+            key={i}
+            className="flex flex-col items-center w-full max-w-[280px]"
+          >
             {/* IMAGE */}
             <img
               src={product.thumbnail}
@@ -151,13 +148,10 @@ export default function MerchPage() {
               </button>
             </Link>
           </div>
-
         ))}
-
       </div>
 
       <Footer />
-
     </div>
   );
 }

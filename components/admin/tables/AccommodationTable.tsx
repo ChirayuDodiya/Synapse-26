@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useState } from 'react';
+import Link from "next/link";
+import { useState } from "react";
 
 interface Accommodation {
   id: number;
@@ -35,7 +35,7 @@ export default function AccommodationTable({
   };
 
   const handleDelete = (id: number) => {
-    if (window.confirm('Are you sure you want to delete this accommodation?')) {
+    if (window.confirm("Are you sure you want to delete this accommodation?")) {
       onDelete(id);
     }
   };
@@ -57,7 +57,10 @@ export default function AccommodationTable({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {accommodations.map((acc) => (
-        <div key={acc.id} className="border rounded-lg p-4 hover:shadow-lg transition bg-white">
+        <div
+          key={acc.id}
+          className="border rounded-lg p-4 hover:shadow-lg transition bg-white"
+        >
           {/* Availability Toggle */}
           <div className="flex justify-between items-start mb-3">
             <h3 className="text-lg font-semibold text-gray-800">{acc.type}</h3>
@@ -65,12 +68,12 @@ export default function AccommodationTable({
               onClick={() => onToggleAvailability(acc.id)}
               disabled={isLoading}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors disabled:opacity-50 ${
-                acc.available ? 'bg-green-500' : 'bg-red-500'
+                acc.available ? "bg-green-500" : "bg-red-500"
               }`}
             >
               <span
                 className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  acc.available ? 'translate-x-6' : 'translate-x-1'
+                  acc.available ? "translate-x-6" : "translate-x-1"
                 }`}
               />
             </button>
@@ -79,27 +82,25 @@ export default function AccommodationTable({
           <span
             className={`inline-block px-2 py-1 rounded-full text-xs font-medium mb-3 ${
               acc.available
-                ? 'bg-green-100 text-green-800'
-                : 'bg-red-100 text-red-800'
+                ? "bg-green-100 text-green-800"
+                : "bg-red-100 text-red-800"
             }`}
           >
-            {acc.available ? '✓ Available' : '✗ Full'}
+            {acc.available ? "✓ Available" : "✗ Full"}
           </span>
 
           <div className="space-y-2 mb-4">
-            <p className="text-2xl font-bold text-indigo-600">
-              ₹{acc.price}
-            </p>
+            <p className="text-2xl font-bold text-indigo-600">₹{acc.price}</p>
             <div className="text-sm text-gray-600">
-              <p>📅 {acc.startDate} to {acc.endDate}</p>
+              <p>
+                📅 {acc.startDate} to {acc.endDate}
+              </p>
               <p className="text-indigo-600 font-medium">
                 Duration: {calculateDuration(acc.startDate, acc.endDate)} days
               </p>
             </div>
             {acc.description && (
-              <p className="text-sm text-gray-600 mt-2">
-                📝 {acc.description}
-              </p>
+              <p className="text-sm text-gray-600 mt-2">📝 {acc.description}</p>
             )}
           </div>
 

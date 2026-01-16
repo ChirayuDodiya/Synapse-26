@@ -1,34 +1,36 @@
-import { createClient } from '@/utils/supabase/server'
-import { NextResponse } from 'next/server'
+import { createClient } from "@/utils/supabase/server";
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-    const supabase = await createClient()
+  const supabase = await createClient();
 
-    try {
-        const body = await request.json()
-        const { email, token, type = 'email' } = body
+  try {
+    const body = await request.json();
+    const { email, token, type = "email" } = body;
 
-        if (!email || !token) {
-            return NextResponse.json({ error: 'Email and OTP token are required' }, { status: 400 })
-        }
-
-        const { data, error } = await supabase.auth.verifyOtp({
-            email,
-            token,
-            type: type as 'email' | 'signup' | 'recovery',
-        })
-
-        if (error) {
-            return NextResponse.json({ error: error.message }, { status: 400 })
-        }
-
-        return NextResponse.json({
-            success: true,
-            message: 'Email verified successfully!',
-            user: data.user
-        })
-
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 })
+    if (!email || !token) {
+      return NextResponse.json(
+        { error: "Email and OTP token are required" },
+        { status: 400 }
+      );
     }
+
+    const { data, error } = await supabase.auth.verifyOtp({
+      email,
+      token,
+      type: type as "email" | "signup" | "recovery",
+    });
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Email verified successfully!",
+      user: data.user,
+    });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }

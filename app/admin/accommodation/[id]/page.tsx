@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import Link from 'next/link';
-import AccommodationForm from '@/components/admin/forms/AccommodationForm';
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
+import Link from "next/link";
+import AccommodationForm from "@/components/admin/forms/AccommodationForm";
 
 interface AccommodationData {
   type: string;
@@ -29,7 +29,9 @@ export default function EditAccommodationPage() {
   const params = useParams();
   const id = params.id as string;
 
-  const [accommodation, setAccommodation] = useState<Accommodation | null>(null);
+  const [accommodation, setAccommodation] = useState<Accommodation | null>(
+    null
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(true);
 
@@ -51,12 +53,12 @@ export default function EditAccommodationPage() {
     setTimeout(() => {
       setAccommodation({
         id: parseInt(id),
-        type: 'Deluxe Package',
+        type: "Deluxe Package",
         price: 5000,
-        startDate: '2025-12-20',
-        endDate: '2025-12-24',
+        startDate: "2025-12-20",
+        endDate: "2025-12-24",
         available: true,
-        description: '4 days accommodation with meals',
+        description: "4 days accommodation with meals",
       });
       setIsLoadingData(false);
     }, 500);
@@ -76,10 +78,10 @@ export default function EditAccommodationPage() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // On success, redirect to list
-      router.push('/admin/accommodation');
+      router.push("/admin/accommodation");
     } catch (error) {
-      console.error('Error updating accommodation:', error);
-      alert('Failed to update accommodation');
+      console.error("Error updating accommodation:", error);
+      alert("Failed to update accommodation");
     } finally {
       setIsLoading(false);
     }
@@ -97,7 +99,10 @@ export default function EditAccommodationPage() {
     return (
       <div className="text-center py-12">
         <p className="text-gray-500 mb-4">Accommodation not found</p>
-        <Link href="/admin/accommodation" className="text-indigo-600 hover:text-indigo-700">
+        <Link
+          href="/admin/accommodation"
+          className="text-indigo-600 hover:text-indigo-700"
+        >
           Back to Accommodations
         </Link>
       </div>
@@ -107,10 +112,15 @@ export default function EditAccommodationPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Link href="/admin/accommodation" className="text-indigo-600 hover:text-indigo-700">
+        <Link
+          href="/admin/accommodation"
+          className="text-indigo-600 hover:text-indigo-700"
+        >
           ← Back to Accommodations
         </Link>
-        <h1 className="text-3xl font-bold text-gray-800">Edit Accommodation Package</h1>
+        <h1 className="text-3xl font-bold text-gray-800">
+          Edit Accommodation Package
+        </h1>
       </div>
 
       <div className="bg-white rounded-lg shadow p-6">
@@ -123,7 +133,9 @@ export default function EditAccommodationPage() {
 
         <div className="mt-6 pt-6 border-t">
           <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-gray-700">Availability Status</span>
+            <span className="text-sm font-medium text-gray-700">
+              Availability Status
+            </span>
             <button
               onClick={() =>
                 setAccommodation({
@@ -132,21 +144,21 @@ export default function EditAccommodationPage() {
                 })
               }
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                accommodation.available ? 'bg-green-500' : 'bg-red-500'
+                accommodation.available ? "bg-green-500" : "bg-red-500"
               }`}
             >
               <span
                 className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                  accommodation.available ? 'translate-x-6' : 'translate-x-1'
+                  accommodation.available ? "translate-x-6" : "translate-x-1"
                 }`}
               />
             </button>
             <span
               className={`text-xs ${
-                accommodation.available ? 'text-green-600' : 'text-red-600'
+                accommodation.available ? "text-green-600" : "text-red-600"
               }`}
             >
-              {accommodation.available ? 'Available' : 'Full'}
+              {accommodation.available ? "Available" : "Full"}
             </span>
           </div>
         </div>

@@ -1,71 +1,81 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useRef, type KeyboardEvent, type ClipboardEvent } from "react"
-import Image from "next/image"
-import Link from "next/link"
+import {
+  useState,
+  useRef,
+  type KeyboardEvent,
+  type ClipboardEvent,
+} from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function OTPPage() {
-  const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""])
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([])
+  const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const handleChange = (index: number, value: string) => {
     if (value.length > 1) {
-      value = value[0]
+      value = value[0];
     }
 
-    if (!/^\d*$/.test(value)) return
+    if (!/^\d*$/.test(value)) return;
 
-    const newOtp = [...otp]
-    newOtp[index] = value
-    setOtp(newOtp)
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
 
     if (value && index < 5) {
-      inputRefs.current[index + 1]?.focus()
+      inputRefs.current[index + 1]?.focus();
     }
-  }
+  };
 
   const handleKeyDown = (index: number, e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus()
+      inputRefs.current[index - 1]?.focus();
     }
-  }
+  };
 
   const handlePaste = (e: ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    const pastedData = e.clipboardData.getData("text").slice(0, 6)
-    if (!/^\d+$/.test(pastedData)) return
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData("text").slice(0, 6);
+    if (!/^\d+$/.test(pastedData)) return;
 
-    const newOtp = [...otp]
+    const newOtp = [...otp];
     pastedData.split("").forEach((char, index) => {
       if (index < 6) {
-        newOtp[index] = char
+        newOtp[index] = char;
       }
-    })
-    setOtp(newOtp)
+    });
+    setOtp(newOtp);
 
-    const lastIndex = Math.min(pastedData.length, 5)
-    inputRefs.current[lastIndex]?.focus()
-  }
+    const lastIndex = Math.min(pastedData.length, 5);
+    inputRefs.current[lastIndex]?.focus();
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("[v0] OTP submitted:", otp.join(""))
-  }
+    e.preventDefault();
+    console.log("[v0] OTP submitted:", otp.join(""));
+  };
 
   return (
     <div className="flex min-h-screen">
       {/* Left Side - Joker Card Image */}
       <div className="relative hidden w-1/2 lg:block">
-        <Image src="/joker.jpg" alt="Joker Card" fill className="object-cover" priority />
+        <Image
+          src="/joker.jpg"
+          alt="Joker Card"
+          fill
+          className="object-cover"
+          priority
+        />
         {/* Dice Logo */}
         {/* <CHANGE> added horizontal gradient overlay to soften the boundary between image and form */}
 
         <div className="absolute top-8 left-8 z-10">
           <div className="relative w-16 h-16">
-            <Link
-              href="/">
+            <Link href="/">
               <Image
                 src="/Synapse Logo.png"
                 alt="Synapse Logo"
@@ -104,7 +114,7 @@ export default function OTPPage() {
                 <input
                   key={index}
                   ref={(el) => {
-                    inputRefs.current[index] = el
+                    inputRefs.current[index] = el;
                   }}
                   type="text"
                   inputMode="numeric"
@@ -120,7 +130,10 @@ export default function OTPPage() {
 
             {/* Resend Code Link */}
             <div className="mb-8 text-center">
-              <button type="button" className="font-poppins text-sm text-white underline hover:text-white/80 cursor-pointer">
+              <button
+                type="button"
+                className="font-poppins text-sm text-white underline hover:text-white/80 cursor-pointer"
+              >
                 Send the code again
               </button>
             </div>
@@ -136,5 +149,5 @@ export default function OTPPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

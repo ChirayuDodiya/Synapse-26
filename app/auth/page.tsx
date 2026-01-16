@@ -1,26 +1,29 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState } from "react"
-import LoginBox from "@/components/LoginBox"
-import RegisterBox from "@/components/RegisterBox"
-import OtpBox from "@/components/OtpBox"
-import ForgotPasswordBox from "@/components/ForgotPasswordBox"
-import Link from "next/link"
-import Image from "next/image"
+import type React from "react";
+import { useState } from "react";
+import LoginBox from "@/components/LoginBox";
+import RegisterBox from "@/components/RegisterBox";
+import OtpBox from "@/components/OtpBox";
+import ForgotPasswordBox from "@/components/ForgotPasswordBox";
+import Link from "next/link";
+import Image from "next/image";
 
-type View = "login" | "register" | "otp" | "forgot"
+type View = "login" | "register" | "otp" | "forgot";
 
 export default function AuthFlipPage() {
-  const [view, setView] = useState<View>("login")
-  const [pendingEmail, setPendingEmail] = useState<string>("")
-  const [otpType, setOtpType] = useState<"signup" | "recovery">("signup")
+  const [view, setView] = useState<View>("login");
+  const [pendingEmail, setPendingEmail] = useState<string>("");
+  const [otpType, setOtpType] = useState<"signup" | "recovery">("signup");
 
-  const handleGoToOtp = (email: string, type: "signup" | "recovery" = "signup") => {
-    setPendingEmail(email)
-    setOtpType(type)
-    setView("otp")
-  }
+  const handleGoToOtp = (
+    email: string,
+    type: "signup" | "recovery" = "signup"
+  ) => {
+    setPendingEmail(email);
+    setOtpType(type);
+    setView("otp");
+  };
 
   return (
     <div className="flex min-h-screen">
@@ -60,16 +63,20 @@ export default function AuthFlipPage() {
               relative w-full
               transition-transform duration-700
               [transform-style:preserve-3d]
-              ${view === "login" || view === "otp"
-                ? "[transform:rotateY(0deg)]"
-                : "[transform:rotateY(180deg)]"
+              ${
+                view === "login" || view === "otp"
+                  ? "[transform:rotateY(0deg)]"
+                  : "[transform:rotateY(180deg)]"
               }
             `}
           >
             {/* FRONT: Login + OTP */}
             <div
-              className={`[backface-visibility:hidden] flex items-center justify-center ${view === "login" || view === "otp" ? "relative" : "absolute inset-0"
-                }`}
+              className={`[backface-visibility:hidden] flex items-center justify-center ${
+                view === "login" || view === "otp"
+                  ? "relative"
+                  : "absolute inset-0"
+              }`}
             >
               {view === "login" && (
                 <LoginBox
@@ -88,8 +95,11 @@ export default function AuthFlipPage() {
 
             {/* BACK: Register + Forgot */}
             <div
-              className={`[backface-visibility:hidden] [transform:rotateY(180deg)] flex items-center justify-center ${view === "register" || view === "forgot" ? "relative" : "absolute inset-0"
-                }`}
+              className={`[backface-visibility:hidden] [transform:rotateY(180deg)] flex items-center justify-center ${
+                view === "register" || view === "forgot"
+                  ? "relative"
+                  : "absolute inset-0"
+              }`}
             >
               {view === "register" && (
                 <RegisterBox
@@ -109,5 +119,5 @@ export default function AuthFlipPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

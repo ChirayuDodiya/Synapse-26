@@ -1,7 +1,7 @@
 interface SponsorTierProps {
-  title: string
-  sponsors: { name: string }[]
-  desktopCols?: 2 | 4
+  title: string;
+  sponsors: { name: string }[];
+  desktopCols?: 2 | 4;
 }
 
 export default function SponsorTier({
@@ -9,15 +9,13 @@ export default function SponsorTier({
   sponsors,
   desktopCols = 4,
 }: SponsorTierProps) {
-
   const gridCols =
     desktopCols === 2
       ? "grid-cols-2 md:grid-cols-2"
-      : "grid-cols-2 md:grid-cols-4"
+      : "grid-cols-2 md:grid-cols-4";
 
   return (
     <section className="w-full flex flex-col items-center mt-16 md:mt-24 mb-14 px-4">
-
       {/* Tier title */}
       <div
         className="
@@ -52,7 +50,6 @@ export default function SponsorTier({
       >
         {sponsors.map((s, i) => (
           <div key={i} className="flex flex-col items-center">
-
             {/* Sponsor image box */}
             <div
               className="
@@ -95,10 +92,9 @@ export default function SponsorTier({
                 {s.name || "Name"}
               </p>
             </div>
-
           </div>
         ))}
       </div>
     </section>
-  )
+  );
 }

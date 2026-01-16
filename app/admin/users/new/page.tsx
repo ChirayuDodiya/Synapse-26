@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type UserFormData = {
   name: string;
@@ -14,18 +14,18 @@ type UserFormData = {
 export default function CreateUserPage() {
   const router = useRouter();
   const [formData, setFormData] = useState<UserFormData>({
-    name: '',
-    email: '',
-    phone: '',
-    college: '',
-    password: '',
+    name: "",
+    email: "",
+    phone: "",
+    college: "",
+    password: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Creating user:', formData);
-    alert('User created successfully!');
-    router.push('/admin/users');
+    console.log("Creating user:", formData);
+    alert("User created successfully!");
+    router.push("/admin/users");
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,7 +36,7 @@ export default function CreateUserPage() {
     <div>
       <div className="mb-6">
         <button
-          onClick={() => router.push('/admin/users')}
+          onClick={() => router.push("/admin/users")}
           className="text-indigo-600 hover:text-indigo-800 flex items-center gap-2"
         >
           ← Back to Users
@@ -123,22 +123,24 @@ export default function CreateUserPage() {
                 placeholder="Minimum 8 characters"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
               />
-              <p className="mt-1 text-sm text-gray-500">Password must be at least 8 characters long</p>
+              <p className="mt-1 text-sm text-gray-500">
+                Password must be at least 8 characters long
+              </p>
             </div>
           </div>
 
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <h3 className="font-semibold text-blue-900 mb-2">Note</h3>
             <p className="text-sm text-blue-800">
-              The user will receive a confirmation email with their login credentials.
-              They can register for events after logging in.
+              The user will receive a confirmation email with their login
+              credentials. They can register for events after logging in.
             </p>
           </div>
 
           <div className="flex justify-end gap-4 pt-4 border-t">
             <button
               type="button"
-              onClick={() => router.push('/admin/users')}
+              onClick={() => router.push("/admin/users")}
               className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
             >
               Cancel

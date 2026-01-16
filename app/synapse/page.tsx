@@ -9,7 +9,7 @@ import JokerSection from "@/components/Home-JokerSection";
 import ArtistsSection from "@/components/Artists";
 import HallOfFame from "@/components/Home-HallOfFame";
 import Footer from "@/components/ui/Footer";
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import NavigationPanel from "@/components/ui/NavigationPanel";
 import { Navbar } from "@/components/ui/Resizable-navbar";
 
@@ -31,7 +31,6 @@ export default function HomeSection() {
       });
     }
   }, [entered]);
-  
 
   return (
     <main className="flex flex-col min-h-screen relative">
@@ -39,7 +38,11 @@ export default function HomeSection() {
       <Navbar visible={showNavbar}>
         <NavigationPanel />
       </Navbar>
-      <HeroSection onEnter={() => setEntered(true)} setShowNavbar={setShowNavbar} showNavbar={showNavbar} />
+      <HeroSection
+        onEnter={() => setEntered(true)}
+        setShowNavbar={setShowNavbar}
+        showNavbar={showNavbar}
+      />
       <div
         className={`
             end
@@ -59,7 +62,6 @@ export default function HomeSection() {
         <HallOfFame />
         <Footer />
       </div>
-
     </main>
   );
 }

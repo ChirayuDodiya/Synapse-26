@@ -6,7 +6,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const supabase = (await createClient()) as any
+    const supabase = (await createClient()) as any;
     const { id: registrationId } = await params;
 
     if (!registrationId) {
@@ -53,10 +53,7 @@ export async function GET(
       .single();
 
     if (error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     const price = data.event_fee?.fee?.price ?? 0;
@@ -68,14 +65,14 @@ export async function GET(
         name: data.users?.user_name,
         email: data.users?.email,
         phone: data.users?.phone,
-        college: data.users?.college
+        college: data.users?.college,
       },
       event: {
         event_name: data.event_fee?.event?.event_name,
         category: data.event_fee?.event?.event_category?.category_name,
         participation_type: data.event_fee?.fee?.participation_type,
         team_size: teamSize,
-        registration_date: data.created_at
+        registration_date: data.created_at,
       },
       payment: {
         method: data.payment_method?.method_name,
@@ -85,8 +82,8 @@ export async function GET(
         transaction_id: data.transaction_id,
         gross_amount: price,
         gateway_charge: gateway,
-        net_amount: price - gateway
-      }
+        net_amount: price - gateway,
+      },
     });
   } catch (err) {
     console.error(err);

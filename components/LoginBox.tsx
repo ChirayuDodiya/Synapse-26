@@ -1,29 +1,29 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState } from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
+import type React from "react";
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface LoginBoxProps {
-  goRegister: () => void
-  goForgot: () => void
+  goRegister: () => void;
+  goForgot: () => void;
 }
 
 export default function LoginBox({ goRegister, goForgot }: LoginBoxProps) {
-  const router = useRouter()
-  const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-  })
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
-    setIsLoading(true)
+    e.preventDefault();
+    setError(null);
+    setIsLoading(true);
 
     try {
       const response = await fetch("/api/auth/login", {
@@ -32,27 +32,27 @@ export default function LoginBox({ goRegister, goForgot }: LoginBoxProps) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Login failed")
+        throw new Error(data.error || "Login failed");
       }
 
       // Redirect based on admin status
       if (data.isAdmin) {
-        router.push("/admin")
+        router.push("/admin");
       } else {
-        router.push("/")
+        router.push("/");
       }
-      router.refresh()
+      router.refresh();
     } catch (err: any) {
-      setError(err.message || "An error occurred during login")
+      setError(err.message || "An error occurred during login");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="w-full max-w-md">
@@ -78,7 +78,9 @@ export default function LoginBox({ goRegister, goForgot }: LoginBoxProps) {
             type="email"
             placeholder="E.g. rsharma@gmail.com"
             value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
             className="w-full px-4 py-3.5 bg-transparent border border-white rounded-md text-white placeholder:text-white/40 focus:outline-none focus:border-white transition-all text-base font-poppins disabled:opacity-50"
             required
             disabled={isLoading}
@@ -149,8 +151,8 @@ export default function LoginBox({ goRegister, goForgot }: LoginBoxProps) {
             href="#"
             className="text-white/80 text-sm underline hover:text-white transition-colors font-poppins"
             onClick={(e) => {
-              e.preventDefault()
-              goForgot()
+              e.preventDefault();
+              goForgot();
             }}
           >
             Forgotten your password?
@@ -164,9 +166,25 @@ export default function LoginBox({ goRegister, goForgot }: LoginBoxProps) {
           className="w-full bg-white text-black py-3.5 rounded-md text-2xl hover:bg-white/90 transition-colors mt-2 font-jqka cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
         >
           {isLoading ? (
-            <svg className="animate-spin h-6 w-6 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <svg
+              className="animate-spin h-6 w-6 text-black"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
           ) : (
             "Continue"
@@ -186,5 +204,5 @@ export default function LoginBox({ goRegister, goForgot }: LoginBoxProps) {
         </p>
       </form>
     </div>
-  )
+  );
 }

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
 interface ArtistData {
   name: string;
@@ -17,23 +17,27 @@ interface ArtistFormProps {
   isLoading?: boolean;
 }
 
-const concertOptions = ['Night 1 - EDM Night', 'Night 2 - Rock Night'];
+const concertOptions = ["Night 1 - EDM Night", "Night 2 - Rock Night"];
 
 export default function ArtistForm({
   initialData,
   onSubmit,
-  submitButtonText = 'Add Artist',
+  submitButtonText = "Add Artist",
   isLoading = false,
 }: ArtistFormProps) {
   const [formData, setFormData] = useState<ArtistData>({
-    name: initialData?.name || '',
+    name: initialData?.name || "",
     concertNight: initialData?.concertNight || concertOptions[0],
-    genre: initialData?.genre || '',
-    revealDate: initialData?.revealDate || '',
-    bio: initialData?.bio || '',
+    genre: initialData?.genre || "",
+    revealDate: initialData?.revealDate || "",
+    bio: initialData?.bio || "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -44,9 +48,14 @@ export default function ArtistForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <form
+      onSubmit={handleSubmit}
+      className="grid grid-cols-1 md:grid-cols-2 gap-4"
+    >
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Artist Name</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Artist Name
+        </label>
         <input
           type="text"
           name="name"
@@ -58,7 +67,9 @@ export default function ArtistForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Concert Night</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Concert Night
+        </label>
         <select
           name="concertNight"
           value={formData.concertNight}
@@ -74,7 +85,9 @@ export default function ArtistForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Genre</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Genre
+        </label>
         <input
           type="text"
           name="genre"
@@ -87,7 +100,9 @@ export default function ArtistForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Reveal Date</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Reveal Date
+        </label>
         <input
           type="date"
           name="revealDate"
@@ -99,7 +114,9 @@ export default function ArtistForm({
       </div>
 
       <div className="md:col-span-2">
-        <label className="block text-sm font-medium text-gray-700 mb-2">Bio</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Bio
+        </label>
         <textarea
           name="bio"
           value={formData.bio}
@@ -116,7 +133,7 @@ export default function ArtistForm({
           disabled={isLoading}
           className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isLoading ? 'Saving...' : submitButtonText}
+          {isLoading ? "Saving..." : submitButtonText}
         </button>
       </div>
     </form>

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
+import Link from "next/link";
 
 interface Artist {
   id: number;
@@ -19,7 +19,11 @@ interface ArtistTableProps {
 
 const isRevealed = (revealDate: string) => new Date(revealDate) <= new Date();
 
-export default function ArtistTable({ artists, onDelete, isLoading = false }: ArtistTableProps) {
+export default function ArtistTable({
+  artists,
+  onDelete,
+  isLoading = false,
+}: ArtistTableProps) {
   if (!artists.length) {
     return (
       <div className="text-center py-12">
@@ -35,7 +39,7 @@ export default function ArtistTable({ artists, onDelete, isLoading = false }: Ar
   }
 
   const handleDelete = (id: number) => {
-    if (window.confirm('Are you sure?')) {
+    if (window.confirm("Are you sure?")) {
       onDelete(id);
     }
   };
@@ -45,30 +49,50 @@ export default function ArtistTable({ artists, onDelete, isLoading = false }: Ar
       <table className="w-full">
         <thead className="bg-gray-50">
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Artist</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Concert Night</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Genre</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Reveal Date</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              Artist
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              Concert Night
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              Genre
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              Reveal Date
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              Status
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
           {artists.map((artist) => (
             <tr key={artist.id} className="hover:bg-gray-50">
-              <td className="px-6 py-4 text-sm font-medium text-gray-900">{artist.name}</td>
-              <td className="px-6 py-4 text-sm text-gray-900">{artist.concertNight}</td>
-              <td className="px-6 py-4 text-sm text-gray-500">{artist.genre}</td>
-              <td className="px-6 py-4 text-sm text-gray-500">{artist.revealDate}</td>
+              <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                {artist.name}
+              </td>
+              <td className="px-6 py-4 text-sm text-gray-900">
+                {artist.concertNight}
+              </td>
+              <td className="px-6 py-4 text-sm text-gray-500">
+                {artist.genre}
+              </td>
+              <td className="px-6 py-4 text-sm text-gray-500">
+                {artist.revealDate}
+              </td>
               <td className="px-6 py-4 text-sm">
                 <span
                   className={`px-2 py-1 rounded-full text-xs ${
                     isRevealed(artist.revealDate)
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-yellow-100 text-yellow-800'
+                      ? "bg-green-100 text-green-800"
+                      : "bg-yellow-100 text-yellow-800"
                   }`}
                 >
-                  {isRevealed(artist.revealDate) ? '👁️ Visible' : '🔒 Hidden'}
+                  {isRevealed(artist.revealDate) ? "👁️ Visible" : "🔒 Hidden"}
                 </span>
               </td>
               <td className="px-6 py-4 text-sm flex gap-3 items-center">

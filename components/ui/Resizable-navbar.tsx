@@ -59,7 +59,7 @@ interface AnimatedMenuItemProps {
 export const Navbar = ({
   children,
   className,
-  visible = false
+  visible = false,
 }: NavbarProps & { visible?: boolean }) => {
   return (
     <motion.div
@@ -68,7 +68,7 @@ export const Navbar = ({
       animate={{
         opacity: visible ? 1 : 0,
         y: visible ? 0 : -80,
-        pointerEvents: visible ? "auto" : "none"
+        pointerEvents: visible ? "auto" : "none",
       }}
       transition={{ duration: 0.3, ease: "easeOut" }}
     >
@@ -99,7 +99,7 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
       className={cn(
         "relative z-[150] mx-auto hidden w-full max-w-[95vw] flex-row items-center justify-between self-start rounded-full bg-black/40 px-6 py-3 lg:flex border border-white/10",
         visible && "bg-black/80",
-        className,
+        className
       )}
     >
       {children}
@@ -115,7 +115,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
       onMouseLeave={() => setHovered(null)}
       className={cn(
         "absolute inset-0 hidden flex-1 flex-row items-center justify-center space-x-2 text-sm font-medium text-white/90 transition duration-200 lg:flex lg:space-x-2",
-        className,
+        className
       )}
     >
       {items.map((item, idx) => (
@@ -133,7 +133,9 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
               className="absolute inset-0 h-full w-full rounded-full bg-[#EB0000]/20 border border-[#EB0000]/40"
             />
           )}
-          <span className="relative z-20 font-joker text-lg tracking-wide">{item.name}</span>
+          <span className="relative z-20 font-joker text-lg tracking-wide">
+            {item.name}
+          </span>
         </Link>
       ))}
     </motion.div>
@@ -160,7 +162,7 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
       className={cn(
         "relative z-50 mx-auto flex w-full flex-col items-center justify-between px-4",
         visible,
-        className,
+        className
       )}
     >
       {children}
@@ -243,7 +245,7 @@ export const MobileNavHeader = ({
     <div
       className={cn(
         "flex w-full px-4 py-2 flex-row items-center justify-between",
-        className,
+        className
       )}
     >
       {children}
@@ -251,34 +253,30 @@ export const MobileNavHeader = ({
   );
 };
 
-export const MobileNavMenu = forwardRef<
-  HTMLDivElement,
-  MobileNavMenuProps
->(function MobileNavMenu(
-  { children, className, isOpen },
-  ref
-) {
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          className={cn(
-            "absolute inset-x-0 top-5 max-h-[70vh] overflow-y-auto z-150 flex w-[calc(100%-130px)] flex-col left-[75px] items-start justify-start gap-4 rounded-lg bg-black/95 px-4 py-8 border border-white/10 shadow-[0_4px_30px_rgba(235,0,0,0.15)] overscroll-contain",
-            className,
-          )}
-          onWheel={(e) => e.stopPropagation()}
-          onTouchMove={(e) => e.stopPropagation()}
-        >
-          {children}
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-});
+export const MobileNavMenu = forwardRef<HTMLDivElement, MobileNavMenuProps>(
+  function MobileNavMenu({ children, className, isOpen }, ref) {
+    return (
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            ref={ref}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className={cn(
+              "absolute inset-x-0 top-5 max-h-[70vh] overflow-y-auto z-150 flex w-[calc(100%-130px)] flex-col left-[75px] items-start justify-start gap-4 rounded-lg bg-black/95 px-4 py-8 border border-white/10 shadow-[0_4px_30px_rgba(235,0,0,0.15)] overscroll-contain",
+              className
+            )}
+            onWheel={(e) => e.stopPropagation()}
+            onTouchMove={(e) => e.stopPropagation()}
+          >
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    );
+  }
+);
 
 export const MobileNavToggle = ({
   isOpen,
@@ -288,9 +286,17 @@ export const MobileNavToggle = ({
   onClick: () => void;
 }) => {
   return isOpen ? (
-    <IconX size={35} className="text-white cursor-pointer hover:text-[#EB0000] transition-colors" onClick={onClick} />
+    <IconX
+      size={35}
+      className="text-white cursor-pointer hover:text-[#EB0000] transition-colors"
+      onClick={onClick}
+    />
   ) : (
-    <IconMenu3 size={35} className="text-white scale-[0.9] md:scale-[1] cursor-pointer hover:text-[#EB0000] transition-colors" onClick={onClick} />
+    <IconMenu3
+      size={35}
+      className="text-white scale-[0.9] md:scale-[1] cursor-pointer hover:text-[#EB0000] transition-colors"
+      onClick={onClick}
+    />
   );
 };
 
@@ -312,12 +318,7 @@ export const NavbarLogo = () => {
   );
 };
 
-type NavbarVariant =
-  | "primary"
-  | "secondary"
-  | "dark"
-  | "gradient"
-  | "register";
+type NavbarVariant = "primary" | "secondary" | "dark" | "gradient" | "register";
 
 interface NavbarButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -338,11 +339,9 @@ export const NavbarButton: React.FC<NavbarButtonProps> = ({
     primary:
       "bg-transparent text-white border-2 border-white shadow-[6px_6px_0px_#EB0000] hover:bg-[#EB0000] hover:text-black hover:border-black hover:shadow-[6px_6px_0px_rgba(255,255,255,0.7)] hover:-translate-y-0.5",
 
-    secondary:
-      "bg-transparent text-white/80 hover:text-white border-0",
+    secondary: "bg-transparent text-white/80 hover:text-white border-0",
 
-    dark:
-      "bg-black text-white border-2 border-white shadow-[6px_6px_0px_#EB0000] hover:bg-[#EB0000] hover:text-black hover:border-black",
+    dark: "bg-black text-white border-2 border-white shadow-[6px_6px_0px_#EB0000] hover:bg-[#EB0000] hover:text-black hover:border-black",
 
     gradient:
       "bg-transparent text-white border-2 border-white shadow-[6px_6px_0px_#EB0000] hover:bg-[#EB0000] hover:text-black hover:border-black hover:shadow-[6px_6px_0px_rgba(255,255,255,0.7)] hover:-translate-y-0.5 hover:scale-105",

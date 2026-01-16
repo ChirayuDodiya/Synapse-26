@@ -1,71 +1,80 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState, useRef, type KeyboardEvent, type ClipboardEvent } from "react"
-import { useRouter } from "next/navigation"
+import type React from "react";
+import {
+  useState,
+  useRef,
+  type KeyboardEvent,
+  type ClipboardEvent,
+} from "react";
+import { useRouter } from "next/navigation";
 
 interface OtpBoxProps {
-  email: string
-  otpType?: "signup" | "recovery"
-  goLogin: () => void
+  email: string;
+  otpType?: "signup" | "recovery";
+  goLogin: () => void;
 }
 
-export default function OtpBox({ email, otpType = "signup", goLogin }: OtpBoxProps) {
-  const router = useRouter()
-  const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""])
-  const [isLoading, setIsLoading] = useState(false)
-  const [isResending, setIsResending] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([])
+export default function OtpBox({
+  email,
+  otpType = "signup",
+  goLogin,
+}: OtpBoxProps) {
+  const router = useRouter();
+  const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const handleChange = (index: number, value: string) => {
-    if (value.length > 1) value = value[0]
-    if (!/^\d*$/.test(value)) return
+    if (value.length > 1) value = value[0];
+    if (!/^\d*$/.test(value)) return;
 
-    const newOtp = [...otp]
-    newOtp[index] = value
-    setOtp(newOtp)
-    setError(null)
+    const newOtp = [...otp];
+    newOtp[index] = value;
+    setOtp(newOtp);
+    setError(null);
 
     if (value && index < 5) {
-      inputRefs.current[index + 1]?.focus()
+      inputRefs.current[index + 1]?.focus();
     }
-  }
+  };
 
   const handleKeyDown = (index: number, e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus()
+      inputRefs.current[index - 1]?.focus();
     }
-  }
+  };
 
   const handlePaste = (e: ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    const pastedData = e.clipboardData.getData("text").slice(0, 6)
-    if (!/^\d+$/.test(pastedData)) return
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData("text").slice(0, 6);
+    if (!/^\d+$/.test(pastedData)) return;
 
-    const newOtp = [...otp]
+    const newOtp = [...otp];
     pastedData.split("").forEach((char, index) => {
-      if (index < 6) newOtp[index] = char
-    })
-    setOtp(newOtp)
+      if (index < 6) newOtp[index] = char;
+    });
+    setOtp(newOtp);
 
-    const lastIndex = Math.min(pastedData.length, 5)
-    inputRefs.current[lastIndex]?.focus()
-  }
+    const lastIndex = Math.min(pastedData.length, 5);
+    inputRefs.current[lastIndex]?.focus();
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
-    setSuccess(null)
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
 
-    const otpCode = otp.join("")
+    const otpCode = otp.join("");
     if (otpCode.length !== 6) {
-      setError("Please enter the complete 6-digit code")
-      return
+      setError("Please enter the complete 6-digit code");
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
       const response = await fetch("/api/auth/verify-otp", {
@@ -78,37 +87,37 @@ export default function OtpBox({ email, otpType = "signup", goLogin }: OtpBoxPro
           token: otpCode,
           type: otpType,
         }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Verification failed")
+        throw new Error(data.error || "Verification failed");
       }
 
-      setSuccess("Email verified successfully! Redirecting...")
+      setSuccess("Email verified successfully! Redirecting...");
 
       // Redirect based on verification type
       setTimeout(() => {
         if (otpType === "recovery") {
           // For password recovery, they'll be redirected to update password page
-          router.push("/auth/update-password")
+          router.push("/auth/update-password");
         } else {
           // For signup verification, redirect to user profile (user stays logged in)
-          router.push("/user-profile")
+          router.push("/user-profile");
         }
-      }, 1500)
+      }, 1500);
     } catch (err: any) {
-      setError(err.message || "An error occurred during verification")
+      setError(err.message || "An error occurred during verification");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleResend = async () => {
-    setError(null)
-    setSuccess(null)
-    setIsResending(true)
+    setError(null);
+    setSuccess(null);
+    setIsResending(true);
 
     try {
       const response = await fetch("/api/auth/resend-otp", {
@@ -120,23 +129,23 @@ export default function OtpBox({ email, otpType = "signup", goLogin }: OtpBoxPro
           email,
           type: otpType,
         }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to resend code")
+        throw new Error(data.error || "Failed to resend code");
       }
 
-      setSuccess("Verification code resent successfully!")
-      setOtp(["", "", "", "", "", ""])
-      inputRefs.current[0]?.focus()
+      setSuccess("Verification code resent successfully!");
+      setOtp(["", "", "", "", "", ""]);
+      inputRefs.current[0]?.focus();
     } catch (err: any) {
-      setError(err.message || "Failed to resend verification code")
+      setError(err.message || "Failed to resend verification code");
     } finally {
-      setIsResending(false)
+      setIsResending(false);
     }
-  }
+  };
 
   return (
     <div className="w-full max-w-md">
@@ -152,7 +161,10 @@ export default function OtpBox({ email, otpType = "signup", goLogin }: OtpBoxPro
           <p className="font-poppins text-sm text-white/80">
             Enter the code from the email sent
             <br />
-            to <span className="text-white font-medium">{email || "your email"}</span>
+            to{" "}
+            <span className="text-white font-medium">
+              {email || "your email"}
+            </span>
           </p>
         </div>
 
@@ -176,7 +188,7 @@ export default function OtpBox({ email, otpType = "signup", goLogin }: OtpBoxPro
             <input
               key={index}
               ref={(el) => {
-                inputRefs.current[index] = el
+                inputRefs.current[index] = el;
               }}
               type="text"
               inputMode="numeric"
@@ -210,9 +222,25 @@ export default function OtpBox({ email, otpType = "signup", goLogin }: OtpBoxPro
           className="w-full rounded bg-white py-4 font-jqka text-2xl cursor-pointer text-black transition-colors hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
         >
           {isLoading ? (
-            <svg className="animate-spin h-6 w-6 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <svg
+              className="animate-spin h-6 w-6 text-black"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
           ) : (
             "Continue"
@@ -232,5 +260,5 @@ export default function OtpBox({ email, otpType = "signup", goLogin }: OtpBoxPro
         </p>
       </form>
     </div>
-  )
+  );
 }

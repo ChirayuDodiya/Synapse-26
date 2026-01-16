@@ -63,4 +63,3 @@ export function SmoothScroller({ children }: SmoothScrollerProps) {
 
   return <div id="smooth-wrapper">{children}</div>;
 }
-

@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
     const eventFilter = searchParams.get("filter");
     const paymentMethod = searchParams.get("paymentMethod");
     const paymentStatus = searchParams.get("paymentStatus");
-    
+
     let query = supabase.from("event_registrations").select(
       `
       transaction_id,
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
       payment_method(method_name,gateway_charge)
       `
     );
-    
+
     if (search.trim()) {
       query = query.or(
         `
@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    
+
     const headers = [
       "Registration ID",
       "Transaction ID",
@@ -71,7 +71,7 @@ export async function GET(req: NextRequest) {
       "Payment Status",
       "Gross Amount",
       "Gateway Charge",
-      "Net Amount"
+      "Net Amount",
     ];
 
     const csvRows = [
@@ -95,19 +95,19 @@ export async function GET(req: NextRequest) {
           row.payment_status,
           price,
           gateway,
-          price - gateway
+          price - gateway,
         ].join(",");
-      })
+      }),
     ];
 
     const csv = csvRows.join("\n");
-    
+
     return new NextResponse(csv, {
       status: 200,
       headers: {
         "Content-Type": "text/csv",
-        "Content-Disposition": `attachment; filename="registrations.csv"`
-      }
+        "Content-Disposition": `attachment; filename="registrations.csv"`,
+      },
     });
   } catch (err) {
     console.error(err);
