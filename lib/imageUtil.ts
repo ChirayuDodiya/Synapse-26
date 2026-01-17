@@ -1,4 +1,4 @@
-import { supabaseServer } from "./supabaseServer";
+import { getSupabaseServer } from "./supabaseServer";
 
 type UploadImageParams = {
     file: File;
@@ -17,7 +17,9 @@ export async function uploadImage({
     const fileName = `${Date.now()}.${fileExt}`;
     const filePath = `${folder}/${fileName}`;
 
-    const { error } = await supabaseServer.storage
+    const supabase = getSupabaseServer();
+
+    const { error } = await supabase.storage
         .from(bucket)
         .upload(filePath, file, {
             cacheControl: "3600",
@@ -29,7 +31,7 @@ export async function uploadImage({
         throw new Error(error.message);
     }
 
-    const { data } = supabaseServer.storage
+    const { data } = supabase.storage
         .from(bucket)
         .getPublicUrl(filePath);
 
@@ -54,8 +56,10 @@ export async function editImage({
 }: EditImageParams) {
     if (!file) throw new Error("No file provided");
 
+    const supabase = getSupabaseServer();
+
     // Delete the old image first
-    const { error: deleteError } = await supabaseServer.storage
+    const { error: deleteError } = await supabase.storage
         .from(bucket)
         .remove([oldFilePath]);
 
@@ -68,7 +72,7 @@ export async function editImage({
     const fileName = `${Date.now()}.${fileExt}`;
     const filePath = `${folder}/${fileName}`;
 
-    const { error: uploadError } = await supabaseServer.storage
+    const { error: uploadError } = await supabase.storage
         .from(bucket)
         .upload(filePath, file, {
             cacheControl: "3600",
@@ -80,7 +84,7 @@ export async function editImage({
         throw new Error(`Failed to upload new image: ${uploadError.message}`);
     }
 
-    const { data } = supabaseServer.storage
+    const { data } = supabase.storage
         .from(bucket)
         .getPublicUrl(filePath);
 
@@ -98,7 +102,9 @@ type DeleteImageParams = {
 export async function deleteImage({ bucket, filePath }: DeleteImageParams) {
     if (!filePath) throw new Error("No file path provided");
 
-    const { error } = await supabaseServer.storage
+    const supabase = getSupabaseServer();
+
+    const { error } = await supabase.storage
         .from(bucket)
         .remove([filePath]);
 
